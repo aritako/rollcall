@@ -43,7 +43,7 @@ const Login: React.FC = () => {
         await present('Logging in...');
         setTimeout(() => {
             dismiss();
-            router.push('/home','root')
+            router.push('/app','forward')
         }, 1000);
         // INSERT LOGIN LOGIC HERE
         console.log('doLogin');
@@ -65,50 +65,50 @@ const Login: React.FC = () => {
             {!introSeen ? (
                 <Intro onFinish = {finishIntro} />
             ) : (
-                <IonPage>
-                    <IonHeader>
-                        <IonToolbar color = {'primary'}>
-                            <IonTitle>RollCall</IonTitle>
-                        </IonToolbar>
-                    </IonHeader>
+    <IonPage>
+        <IonHeader>
+            <IonToolbar color = {'primary'}>
+                <IonTitle>RollCall</IonTitle>
+            </IonToolbar>
+        </IonHeader>
 
-                    <IonContent scrollY={false} className = "ion-padding">
-                        <IonGrid fixed>
-                            <IonRow class = "ion-justify-content-center">
-                                <IonCol size = '12' sizeMd = '8' sizeLg = '6' sizeXl = "4">
-                                    <div className = "ion-text-center ion-padding">
-                                    <img src = {logoSample} alt = "RollCall Logo" style = {{width: '50%'}}/>
-                                    </div>
-                                </IonCol>
-                            </IonRow>
+        <IonContent scrollY={false} className = "ion-padding">
+            <IonGrid fixed>
+                <IonRow class = "ion-justify-content-center">
+                    <IonCol size = '12' sizeMd = '8' sizeLg = '6' sizeXl = "4">
+                        <div className = "ion-text-center ion-padding">
+                        <img src = {logoSample} alt = "RollCall Logo" style = {{width: '50%'}}/>
+                        </div>
+                    </IonCol>
+                </IonRow>
 
-                            <IonRow class = "ion-justify-content-center">
-                                <IonCol size = '12' sizeMd = '8' sizeLg = '6' sizeXl = "4">
-                                    <IonCard>
-                                        <IonCardContent>
-                                            <form onSubmit = {doLogin}>
-                                                <IonInput type = "email" label = "UP Email" labelPlacement="floating" fill = "outline" placeholder = "UP Email"/>
-                                                <IonInput type = "password" label = "Password" labelPlacement="floating" fill = "outline" placeholder = "Password" className = "ion-margin-top"/>
-                                                <IonButton type = 'submit' expand = "block" className = "ion-margin-top">
-                                                    Login
-                                                {/* <IonIcon icon = {logInOutline}/> */}
-                                                </IonButton>
-                                            </form>
-                                            <IonButton color = "tertiary" routerLink = "/register" type = 'submit' expand = "block" className = "ion-margin-top">
-                                                    Create Account
-                                            </IonButton>
-                                            <IonButton onClick={resetIntro} color="medium" fill="clear" expand ="block" type='submit' className="ion-margin-top ion-justify-content-center" size="small">
-                                                What's RollCall About?
-                                            </IonButton>
-                                        </IonCardContent>
-                                    </IonCard>
-                                </IonCol>
-                            </IonRow>
-                        </IonGrid>
-                        
-                    </IonContent>
+                <IonRow class = "ion-justify-content-center">
+                    <IonCol size = '12' sizeMd = '8' sizeLg = '6' sizeXl = "4">
+                        <IonCard>
+                            <IonCardContent>
+                                <form onSubmit = {doLogin}>
+                                    <IonInput type = "email" label = "UP Email" labelPlacement="floating" fill = "outline" placeholder = "UP Email"/>
+                                    <IonInput type = "password" label = "Password" labelPlacement="floating" fill = "outline" placeholder = "Password" className = "ion-margin-top"/>
+                                    <IonButton type = 'submit' expand = "block" className = "ion-margin-top">
+                                        Login
+                                    {/* <IonIcon icon = {logInOutline}/> */}
+                                    </IonButton>
+                                </form>
+                                <IonButton color = "tertiary" routerLink = "/register" type = 'submit' expand = "block" className = "ion-margin-top">
+                                        Create Account
+                                </IonButton>
+                                <IonButton onClick={resetIntro} color="medium" fill="clear" expand ="block" type='submit' className="ion-margin-top ion-justify-content-center" size="small">
+                                    What's RollCall About?
+                                </IonButton>
+                            </IonCardContent>
+                        </IonCard>
+                    </IonCol>
+                </IonRow>
+            </IonGrid>
+            
+        </IonContent>
 
-                </IonPage>
+    </IonPage>
             )}
         </>
     );
