@@ -16,8 +16,8 @@ const Home: React.FC = () => {
       <IonSplitPane contentId = 'main' when = "xl">
       <IonMenu contentId = 'main'>
           <IonHeader>
-              <IonToolbar color = {'secondary'}>
-                  <IonTitle>Menu</IonTitle>
+              <IonToolbar>
+                  <IonTitle>RollCall</IonTitle>
               </IonToolbar>
           </IonHeader>
           <IonContent>
