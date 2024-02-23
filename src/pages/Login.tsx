@@ -62,9 +62,10 @@ const Login: React.FC = () => {
 
     return (
         <>
-            {!introSeen ? (
+            {introSeen === false ? (
                 <Intro onFinish = {finishIntro} />
             ) : (
+                introSeen === true && (
     <IonPage>
         <IonHeader>
             <IonToolbar color = {'primary'}>
@@ -109,6 +110,7 @@ const Login: React.FC = () => {
         </IonContent>
 
     </IonPage>
+                )
             )}
         </>
     );

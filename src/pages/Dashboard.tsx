@@ -14,7 +14,7 @@ const List: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding">
-                UI goes here...
+                Dashboard
             </IonContent>
         </IonPage>
     );
