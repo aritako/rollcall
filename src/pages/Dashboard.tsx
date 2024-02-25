@@ -1,7 +1,7 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React from 'react';
 
-const List: React.FC = () => {
+const Dashboard: React.FC = () => {
 
     return (
         <IonPage>
@@ -20,4 +20,4 @@ const List: React.FC = () => {
     );
 };
 
-export default List;
+export default Dashboard;
