@@ -10,11 +10,11 @@ const Tab2: React.FC = () => {
                     <IonButtons slot = "start">
                         <IonMenuButton/>
                     </IonButtons>
-                    <IonTitle>Tab2</IonTitle>
+                    <IonTitle>Scan QR Code</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding">
-                UI goes here...
+                Insert Scan QR UI Here...
             </IonContent>
         </IonPage>
     );

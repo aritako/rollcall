@@ -2,9 +2,9 @@ import { IonButtons, IonContent, IonHeader, IonIcon, IonLabel, IonMenuButton, Io
 import { triangle, ellipse, square } from 'ionicons/icons';
 import React from 'react';
 import { Route, Redirect } from 'react-router';
-import Tab1 from './Tab1';
-import Tab2 from './Tab2';
-import Tab3 from './Tab3';
+import Tab1 from './View';
+import Tab2 from './Scan';
+import Tab3 from './Profile';
 
 const Dashboard: React.FC = () => {
 

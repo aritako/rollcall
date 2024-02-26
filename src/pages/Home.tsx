@@ -5,8 +5,8 @@ import Dashboard from './Dashboard';
 import Settings from './Settings';
 import { homeOutline, logOutOutline, newspaperOutline } from 'ionicons/icons';
 import './Home.css';
-import Tab2 from './Tab2';
-import Tab3 from './Tab3';
+import Tab2 from './Scan';
+import Tab3 from './Profile';
 
 const Home: React.FC = () => {
   const paths = [
