@@ -17,6 +17,17 @@ To run the project in your local development server for app development and test
 ```
 ionic serve
 ```
+
+For automated testing, Playwright provides an easy-to-use framework. To install:
+```
+npm install playwright
+npx playwright install
+```
+Once installed, unit tests specified in `./test/example.spec.ts` is executable via:
+```
+npx playwright test
+```
+
 ## Simulation on Android Device
 Before proceeding, please ensure that **Java 17** and **Android Studio** are installed in your machine.
 
