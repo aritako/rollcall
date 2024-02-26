@@ -5,11 +5,13 @@ import Dashboard from './Dashboard';
 import Settings from './Settings';
 import { homeOutline, logOutOutline, newspaperOutline } from 'ionicons/icons';
 import './Home.css';
+import Tab2 from './Tab2';
+import Tab3 from './Tab3';
 
 const Home: React.FC = () => {
   const paths = [
-    { name: 'Home', url: '/app/dashboard', icon: homeOutline },
-    { name: 'Settings', url: '/app/settings/tab1', icon: newspaperOutline },
+    { name: 'Home', url: '/app/dashboard/view', icon: homeOutline },
+    { name: 'Settings', url: '/app/settings', icon: newspaperOutline },
   ]
   console.log('Home');
   return (
@@ -39,11 +41,14 @@ const Home: React.FC = () => {
           </IonContent>
       </IonMenu>
       <IonRouterOutlet id = 'main'>
-          <Route exact path = "/app/dashboard" component = {Dashboard} />
+          <Route path = "/app/dashboard" component = {Dashboard} />
+          <Route path = "/app/settings" component = {Settings} />
+          {/* <Route path = "/app/dashboard/scan" component = {Dashboard} />
+          <Route path = "/app/dashboard/profile" component = {Dashboard} />
           <Route path = "/app/settings/tab1" component = {Settings} />
-          <Route path = "/app/settings/tab2" component = {Settings} />
+          <Route path = "/app/settings/tab2" component = {Settings} /> */}
           <Route exact path = "/app">
-              <Redirect to = "/app/dashboard"/>
+              <Redirect to = "/app/dashboard/view"/>
           </Route>
       </IonRouterOutlet>
       </IonSplitPane>
