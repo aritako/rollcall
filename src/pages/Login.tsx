@@ -95,6 +95,10 @@ const Login: React.FC = () => {
                                     {/* <IonIcon icon = {logInOutline}/> */}
                                     </IonButton>
                                 </form>
+                                {/* replace with ionic tutorial page */}
+                                <IonButton color = "tertiary" routerLink = "/register" type = 'submit' expand = "block" className = "ion-margin-top">
+                                        Login with Magic Link
+                                </IonButton>
                                 <IonButton color = "tertiary" routerLink = "/register" type = 'submit' expand = "block" className = "ion-margin-top">
                                         Create Account
                                 </IonButton>
