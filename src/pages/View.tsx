@@ -3,15 +3,33 @@ import React from 'react';
 
 function Example() {
     return (
-        <IonCard>
-          <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
-          <IonCardHeader>
-            <IonCardTitle>Card Title</IonCardTitle>
-            <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
-          </IonCardHeader>
-    
-          <IonCardContent>Here's a small text description for the card content. Nothing more, nothing less.</IonCardContent>
-        </IonCard>
+        <>
+            <IonCard>
+                <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+                <IonCardHeader>
+                    <IonCardTitle>Welcome Back!</IonCardTitle>
+                    <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
+                </IonCardHeader>
+            
+                <IonCardContent>Here's a small text description for the card content. Nothing more, nothing less.</IonCardContent>
+            </IonCard>
+            <IonCard>
+                <IonCardHeader>
+                <IonCardTitle>CS 192</IonCardTitle>
+                <IonCardSubtitle>Software Engineering II</IonCardSubtitle>
+                </IonCardHeader>
+        
+                <IonCardContent>Here's a small text description for the card content. Nothing more, nothing less.</IonCardContent>
+            </IonCard>
+            <IonCard>
+                <IonCardHeader>
+                <IonCardTitle>CS 145</IonCardTitle>
+                <IonCardSubtitle>Computer Networks</IonCardSubtitle>
+                </IonCardHeader>
+        
+                <IonCardContent>Here's a small text description for the card content. Nothing more, nothing less.</IonCardContent>
+            </IonCard>
+        </>
       );
   }
 
