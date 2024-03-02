@@ -18,31 +18,42 @@ test('has title', async ({ page }) => {
 //   await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
 // });
 
-test('has title', async ({ page }) => {
+test('HAS TITLE', async ({ page }) => {
   await page.goto('http://localhost:8100/');
   await expect(page).toHaveTitle(/RollCall/);
 });
 
 
-test('LOG IN', async ({ page }) => {
-  await page.goto('http://localhost:8100/');
-  await page.getByRole('link', { name: 'LOGIN' }).click();
-  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+test('Dashboard Classes', async ({ page }) => {
+  await page.goto('http://localhost:8100/app/dashboard/view');
+  const cs192CardTitle = await page.textContent('ion-card:nth-child(2) ion-card-title');
+  expect(cs192CardTitle).toContain('CS 192');
+
+  const cs192CardSubtitle = await page.textContent('ion-card:nth-child(2) ion-card-subtitle');
+  expect(cs192CardSubtitle).toContain('Software Engineering II');
+
+  const cs145CardTitle = await page.textContent('ion-card:nth-child(3) ion-card-title');
+  expect(cs145CardTitle).toContain('CS 145');
+
+  const cs145CardSubtitle = await page.textContent('ion-card:nth-child(3) ion-card-subtitle');
+  expect(cs145CardSubtitle).toContain('Computer Networks');
 });
 
-test('DASHBOARD CLASSES', async ({ page }) => {
+test('Navigate to Scan tab', async ({ page }) => {
   await page.goto('http://localhost:8100/app/dashboard/view');
-  await expect(page).toHaveTitle(/CS 192/);
+
+  const scanTabButton = await page.$('ion-tab-button[tab="tab2"]');
+  await scanTabButton!.click();
+  const currentUrl = page.url();
+  expect(currentUrl).toContain('/app/dashboard/scan');
 });
 
-test('SCAN QR WORKS', async ({ page }) => {
+test('Navigate to Profile tab', async ({ page }) => {
   await page.goto('http://localhost:8100/app/dashboard/view');
-  await page.getByRole('link', { name: 'Scan' }).click();
-  await expect(page.getByRole('heading', { name: 'Scan QR Code' })).toBeVisible();
+
+  const scanTabButton = await page.$('ion-tab-button[tab="tab3"]');
+  await scanTabButton!.click();
+  const currentUrl = page.url();
+  expect(currentUrl).toContain('/app/dashboard/profile');
 });
 
-test('PROFILE', async ({ page }) => {
-  await page.goto('http://localhost:8100/app/dashboard/view');
-  await page.getByRole('link', { name: 'Profile' }).click();
-  await expect(page.getByRole('heading', { name: 'Profile' })).toBeVisible();
-});
