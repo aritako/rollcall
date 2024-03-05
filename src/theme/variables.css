@@ -68,11 +68,11 @@ http://ionicframework.com/docs/theming/ */
 
 }
 
-@media (prefers-color-scheme: dark) {
-  /*
+/* @media (prefers-color-scheme: dark) {
+  
    * Dark Colors
    * -------------------------------------------
-   */
+   
 
   body {
     --ion-color-primary: #912F40;
@@ -142,7 +142,7 @@ http://ionicframework.com/docs/theming/ */
   /*
    * iOS Dark Theme
    * -------------------------------------------
-   */
+   
 
   .ios body {
     --ion-background-color: #000000;
@@ -186,7 +186,7 @@ http://ionicframework.com/docs/theming/ */
   /*
    * Material Design Dark Theme
    * -------------------------------------------
-   */
+   
 
   .md body {
     --ion-background-color: #121212;
@@ -225,7 +225,7 @@ http://ionicframework.com/docs/theming/ */
 
     --ion-card-background: #1e1e1e;
   }
-}
+} */
 
 html {
   /* For more information on dynamic font scaling, visit the documentation: 
