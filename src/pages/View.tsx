@@ -1,40 +1,25 @@
 import { IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React from 'react';
-
-function Example() {
-    return (
-        <>
-            <IonCard>
-                <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
-                <IonCardHeader>
-                    <IonCardTitle>Welcome Back!</IonCardTitle>
-                    <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
-                </IonCardHeader>
-            
-                <IonCardContent>Here's a small text description for the card content. Nothing more, nothing less.</IonCardContent>
-            </IonCard>
-            <IonCard>
-                <IonCardHeader>
-                <IonCardTitle>CS 192</IonCardTitle>
-                <IonCardSubtitle>Software Engineering II</IonCardSubtitle>
-                </IonCardHeader>
-        
-                <IonCardContent>Here's a small text description for the card content. Nothing more, nothing less.</IonCardContent>
-            </IonCard>
-            <IonCard>
-                <IonCardHeader>
-                <IonCardTitle>CS 145</IonCardTitle>
-                <IonCardSubtitle>Computer Networks</IonCardSubtitle>
-                </IonCardHeader>
-        
-                <IonCardContent>Here's a small text description for the card content. Nothing more, nothing less.</IonCardContent>
-            </IonCard>
-        </>
-      );
-  }
+import ClassCard from '../components/ClassCard';
+type Class = {
+    course: string;
+    prof: string;
+    time: string;
+};
 
 const Tab1: React.FC = () => {
-
+    const sampleClass : Array<Class>= [
+        {
+            course: "CS 192",
+            prof: "Solamo",
+            time: "7:30 am"
+        },
+        {
+            course: "CS 145",
+            prof: "Tan",
+            time: "8:30 am"
+        },
+    ];
     return (
         <IonPage>
             <IonHeader>
@@ -46,7 +31,14 @@ const Tab1: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding">
-                <Example />
+                {sampleClass.map((item, index) => (
+                    <ClassCard 
+                        key = {index}
+                        course = {item.course} 
+                        prof = {item.prof} 
+                        time = {item.time}
+                    />
+                ))}
             </IonContent>
         </IonPage>
     );
