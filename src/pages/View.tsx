@@ -7,7 +7,7 @@ type Class = {
     time: string;
 };
 
-const Tab1: React.FC = () => {
+const View: React.FC = () => {
     const sampleClass : Array<Class>= [
         {
             course: "CS 192",
@@ -44,4 +44,4 @@ const Tab1: React.FC = () => {
     );
 };
 
-export default Tab1;
+export default View;
