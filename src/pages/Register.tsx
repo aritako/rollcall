@@ -52,6 +52,26 @@ const Register: React.FC = () => {
                                                 Submit
                                             {/* <IonIcon icon = {logInOutline}/> */}
                                             </IonButton>
+                                            <div
+                                                        id="g_id_onload"
+                                                        data-client_id="535815826046-bte1m9skc89vigj6e296hhp5u57oooqg.apps.googleusercontent.com"
+                                                        data-context="signin"
+                                                        data-ux_mode="popup"
+                                                        data-callback="handleSignInWithGoogle"
+                                                        data-nonce=""
+                                                        data-auto_select="true"
+                                                        data-itp_support="true"
+                                                    ></div>
+
+                                                    <div
+                                                        className="g_id_signin"
+                                                        data-type="standard"
+                                                        data-shape="pill"
+                                                        data-theme="outline"
+                                                        data-text="signin_with"
+                                                        data-size="large"
+                                                        data-logo_alignment="left"
+                                                    ></div>
                                         </form>
                                     </IonCardContent>
                                 </IonCard>
