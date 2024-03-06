@@ -44,16 +44,13 @@ const { data, error } = await supabase.auth.signInWithOAuth({
 })
 */
 // CLIENT ID FOR OAUTH: 535815826046-bte1m9skc89vigj6e296hhp5u57oooqg.apps.googleusercontent.com
-async function handleSignInWithGoogle(response : any) {
-    const { data, error } = await supabase.auth.signInWithIdToken({
-      provider: 'google',
-      token: response.credential,
-      nonce: 'NONCE', // must be the same one as provided in data-nonce (if any)
-    })
-  }
+
   
 
 const Login: React.FC = () => {
+
+    
+
     const [introSeen, setIntroSeen] = useState(true);
     const router = useIonRouter();
     const [present, dismiss] = useIonLoading();
@@ -77,6 +74,12 @@ const Login: React.FC = () => {
         console.log('doLogin');
         //router.push('/home', 'root') 
     }
+
+    async function handleSignInWithGoogle(response : any) {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+        })
+      }
 
     const finishIntro = async () => {
         setIntroSeen(true);
@@ -123,6 +126,12 @@ const Login: React.FC = () => {
                                     {/* <IonIcon icon = {logInOutline}/> */}
                                     </IonButton>
                                 </form>
+                                <IonButton type = 'submit' expand = "block" className = "ion-margin-top"
+                                                        color="primary"
+                                                        onClick={handleSignInWithGoogle}>
+                                                        Login with Google
+                                                    </IonButton>
+                                                    {/* google sign in button */}
                                                     <div
                                                         id="g_id_onload"
                                                         data-client_id="535815826046-bte1m9skc89vigj6e296hhp5u57oooqg.apps.googleusercontent.com"
