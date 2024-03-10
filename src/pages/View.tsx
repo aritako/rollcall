@@ -46,12 +46,10 @@ const View: React.FC = () => {
                     </IonButton>
                 </div>
                 <h1 className="font-heavy">Your Classes</h1>
-                {sampleClass.map((item, index) => (
+                {sampleClass.map((item, idx) => (
                     <ClassCard
-                        key={index}
-                        course={item.course}
-                        prof={item.prof}
-                        time={item.time}
+                        key = {idx}
+                       {...item}
                     />
                 ))}
             </IonContent>
