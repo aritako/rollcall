@@ -11,12 +11,14 @@ interface ClassCardProps {
 const ClassCard: React.FC<ClassCardProps> = (props) : JSX.Element => {
     
     return (
-        <IonCard className = "card-class">
-            <IonCardHeader>
-                <IonCardTitle>{props.course}</IonCardTitle>
-                {props.prof && <IonCardSubtitle>{`Prof. ${props.prof}`}</IonCardSubtitle>}
-            </IonCardHeader>
-
+        <IonCard className = "card-class round-border">
+            <div className = "card-class-info">
+                <img src = "https://picsum.photos/50" className = "round-border card-class-icon"/>
+                <IonCardHeader>
+                    <IonCardTitle>{props.course}</IonCardTitle>
+                    {props.prof && <IonCardSubtitle>{`Prof. ${props.prof}`}</IonCardSubtitle>}
+                </IonCardHeader>
+            </div>
             <IonCardContent>{props.time}</IonCardContent>
         </IonCard>
     );
