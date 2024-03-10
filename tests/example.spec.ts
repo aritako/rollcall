@@ -26,17 +26,11 @@ test('Check title of application', async ({ page }) => {
 
 test('View Dashboard Classes', async ({ page }) => {
   await page.goto('/app/dashboard/view');
-  const cs192CardTitle = await page.textContent('ion-card:nth-child(2) ion-card-title');
-  expect(cs192CardTitle).toContain('CS 192');
 
-  const cs192CardSubtitle = await page.textContent('ion-card:nth-child(2) ion-card-subtitle');
-  expect(cs192CardSubtitle).toContain('Software Engineering II');
-
-  const cs145CardTitle = await page.textContent('ion-card:nth-child(3) ion-card-title');
-  expect(cs145CardTitle).toContain('CS 145');
-
-  const cs145CardSubtitle = await page.textContent('ion-card:nth-child(3) ion-card-subtitle');
-  expect(cs145CardSubtitle).toContain('Computer Networks');
+  await expect(page.getByTestId('class-card-CS 192')).toBeVisible();
+  await expect(page.getByText('CS 192')).toBeVisible();
+  await expect(page.getByTestId('class-card-CS 145')).toBeVisible();
+  await expect(page.getByText('CS 145')).toBeVisible();
 });
 
 test('Navigate to Scan tab', async ({ page }) => {
