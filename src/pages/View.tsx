@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import ClassCard from '../components/ClassCard';
 import Dashboard from './Dashboard';
@@ -8,46 +8,37 @@ import { settingsOutline } from 'ionicons/icons';
 import supabase from '../config/supabaseClient';
 
 type Class = {
-    course: string;
-    prof: string;
-    time: string;
+    id: number;
+    course_name: string;
+    course_title: string;
+    time_start: string;
+    time_end: string;
+    professor: string;
 };
 
 const View: React.FC = () => {
     const [fetchError, setFetchError] : Array<any> = useState(null)
-    const [classes, setClasses] : Array<any> = useState(null)
+    const [courses, setCourses] : Array<any> = useState(null)
 
     useEffect(() => {
         const fetchClasses = async () => {
             const { data, error } = await supabase
-            .from('class')
+            .from('sample_class')
             .select()
             
             if (error) {
                 setFetchError("An error occurred while fetching classes")
-                setClasses(null)
+                setCourses(null)
                 console.log(error)
             }
             if (data){
-                setClasses(data)
+                setCourses(data)
                 setFetchError(null)
             }
         }
         fetchClasses()
     }, [])
 
-    const sampleClass : Array<Class>= [
-        {
-            course: "CS 192",
-            prof: "Solamo",
-            time: "7:30 am"
-        },
-        {
-            course: "CS 145",
-            prof: "Tan",
-            time: "8:30 am"
-        },
-    ];
     return (
         <IonPage>
             <IonHeader>
@@ -58,6 +49,7 @@ const View: React.FC = () => {
                     <IonTitle>Dashboard</IonTitle>
                 </IonToolbar>
             </IonHeader>
+            {fetchError && <div>{fetchError}</div>}
             <IonContent className="ion-padding">
                 <div className = "flex align-center ion-margin-vertical">
                     <img 
@@ -70,10 +62,10 @@ const View: React.FC = () => {
                     </IonButton>
                 </div>
                 <h1 className="font-heavy">Your Classes</h1>
-                {sampleClass.map((item, idx) => (
+                {courses && courses.map((item: Class) => (
                     <ClassCard
-                        key = {idx}
-                       {...item}
+                        key={item.id}
+                        {...item}
                     />
                 ))}
             </IonContent>
