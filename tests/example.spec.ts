@@ -13,6 +13,8 @@ test('View Dashboard Classes', async ({ page }) => {
   await expect(page.getByText('CS 192')).toBeVisible();
   await expect(page.getByTestId('class-card-CS 145')).toBeVisible();
   await expect(page.getByText('CS 145')).toBeVisible();
+  await expect(page.getByTestId('class-card-CS 153')).toBeVisible();
+  await expect(page.getByText('CS 153')).toBeVisible();
 });
 
 test('Navigate to Scan tab', async ({ page }) => {
