@@ -1,0 +1,14 @@
+.card-class ion-card-title,ion-card-subtitle {
+    margin: 0;
+    padding: 2px 0px;
+}
+
+.card-class-icon{
+    width: 50px;
+    height: 50px;
+}
+
+.card-class-info{
+    display: flex;
+    align-items: center;
+}

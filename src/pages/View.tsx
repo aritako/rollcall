@@ -1,55 +1,60 @@
-import { IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React from 'react';
+import ClassCard from '../components/ClassCard';
+import Dashboard from './Dashboard';
+import './Dashboard.css';
+import UserImage from '../assets/user.png'
+import { settingsOutline } from 'ionicons/icons';
+type Class = {
+    course: string;
+    prof: string;
+    time: string;
+};
 
-function Example() {
-    return (
-        <>
-            <IonCard>
-                <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
-                <IonCardHeader>
-                    <IonCardTitle>Welcome Back!</IonCardTitle>
-                    <IonCardSubtitle>Card Subtitle</IonCardSubtitle>
-                </IonCardHeader>
-            
-                <IonCardContent>Here's a small text description for the card content. Nothing more, nothing less.</IonCardContent>
-            </IonCard>
-            <IonCard>
-                <IonCardHeader>
-                <IonCardTitle>CS 192</IonCardTitle>
-                <IonCardSubtitle>Software Engineering II</IonCardSubtitle>
-                </IonCardHeader>
-        
-                <IonCardContent>Here's a small text description for the card content. Nothing more, nothing less.</IonCardContent>
-            </IonCard>
-            <IonCard>
-                <IonCardHeader>
-                <IonCardTitle>CS 145</IonCardTitle>
-                <IonCardSubtitle>Computer Networks</IonCardSubtitle>
-                </IonCardHeader>
-        
-                <IonCardContent>Here's a small text description for the card content. Nothing more, nothing less.</IonCardContent>
-            </IonCard>
-        </>
-      );
-  }
-
-const Tab1: React.FC = () => {
-
+const View: React.FC = () => {
+    const sampleClass : Array<Class>= [
+        {
+            course: "CS 192",
+            prof: "Solamo",
+            time: "7:30 am"
+        },
+        {
+            course: "CS 145",
+            prof: "Tan",
+            time: "8:30 am"
+        },
+    ];
     return (
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    <IonButtons slot = "start">
-                        <IonMenuButton/>
+                    <IonButtons slot="start">
+                        <IonMenuButton />
                     </IonButtons>
                     <IonTitle>Dashboard</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding">
-                <Example />
+                <div className = "flex align-center ion-margin-vertical">
+                    <img 
+                        src= {UserImage} alt="User" 
+                        className = "icon-profile"
+                    />
+                    <IonTitle color = {'dark'} className = "font-medium">Hello, User!</IonTitle>
+                    <IonButton fill = "outline" className = "settings-button">
+                        <IonIcon icon = {settingsOutline} className = "settings-button-ion-icon"></IonIcon>
+                    </IonButton>
+                </div>
+                <h1 className="font-heavy">Your Classes</h1>
+                {sampleClass.map((item, idx) => (
+                    <ClassCard
+                        key = {idx}
+                       {...item}
+                    />
+                ))}
             </IonContent>
         </IonPage>
     );
 };
 
-export default Tab1;
+export default View;

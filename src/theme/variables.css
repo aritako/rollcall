@@ -231,4 +231,38 @@ html {
   /* For more information on dynamic font scaling, visit the documentation: 
   https://ionicframework.com/docs/layout/dynamic-font-scaling */
   --ion-dynamic-font: var(--ion-default-dynamic-font);
+  --ion-font-family: 'Inter';
+}
+.flex {
+	display: flex;
+}
+
+.align-center{
+	align-items: center;
+
+}
+.card-class{
+	background-color: none;
+	box-shadow: none;
+	border: #DEDEDE 1px solid;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 12px;
+}
+
+.round-border{
+	border-radius: 18px;
+}
+
+.light-border{
+	border: #DEDEDE 1px solid;
+}
+
+.font-heavy{
+	font-weight: 800;
+}
+
+.font-medium{
+	font-weight: 600;
 }
