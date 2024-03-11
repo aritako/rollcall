@@ -1,10 +1,12 @@
 import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ClassCard from '../components/ClassCard';
 import Dashboard from './Dashboard';
 import './Dashboard.css';
 import UserImage from '../assets/user.png'
 import { settingsOutline } from 'ionicons/icons';
+import supabase from '../config/supabaseClient';
+
 type Class = {
     course: string;
     prof: string;
@@ -12,6 +14,28 @@ type Class = {
 };
 
 const View: React.FC = () => {
+    const [fetchError, setFetchError] : Array<any> = useState(null)
+    const [classes, setClasses] : Array<any> = useState(null)
+
+    useEffect(() => {
+        const fetchClasses = async () => {
+            const { data, error } = await supabase
+            .from('class')
+            .select()
+            
+            if (error) {
+                setFetchError("An error occurred while fetching classes")
+                setClasses(null)
+                console.log(error)
+            }
+            if (data){
+                setClasses(data)
+                setFetchError(null)
+            }
+        }
+        fetchClasses()
+    }, [])
+
     const sampleClass : Array<Class>= [
         {
             course: "CS 192",
