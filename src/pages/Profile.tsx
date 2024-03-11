@@ -2,8 +2,7 @@ import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, Io
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import React from 'react';
-
-const supabase = createClient("https://rckwuovuvxpzfjgzkhdq.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJja3d1b3Z1dnhwemZqZ3praGRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDg2NTM2NzgsImV4cCI6MjAyNDIyOTY3OH0.CfJK2zFd2Kw_Lcx57AD1uf7QX502HOkz2vlngcCu7Pk");
+import supabase from '../config/supabaseClient';
 
 const Tab2: React.FC = () => {
 
