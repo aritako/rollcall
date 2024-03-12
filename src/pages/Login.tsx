@@ -78,6 +78,9 @@ const Login: React.FC = () => {
     async function handleSignInWithGoogle(response : any) {
         const { data, error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
+          options: {
+            redirectTo: 'http://localhost:8100/app/dashboard/view',
+          },
         })
       }
 
