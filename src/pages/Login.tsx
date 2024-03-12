@@ -29,6 +29,8 @@ const Login: React.FC = () => {
     const [introSeen, setIntroSeen] = useState(true);
     const router = useIonRouter();
     const [present, dismiss] = useIonLoading();
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
     // Check for preferences
     useEffect(() => {
         const checkStorage = async () => {
@@ -88,8 +90,8 @@ const Login: React.FC = () => {
                         <IonCard>
                             <IonCardContent>
                                 <form onSubmit = {doLogin}>
-                                    <IonInput type = "email" label = "UP Email" labelPlacement="floating" fill = "outline" placeholder = "UP Email"/>
-                                    <IonInput type = "password" label = "Password" labelPlacement="floating" fill = "outline" placeholder = "Password" className = "ion-margin-top"/>
+                                    <IonInput required type = "email" label = "UP Email" labelPlacement="floating" fill = "outline" placeholder = "UP Email" onIonChange={(e: any) => setUsername(e.target.value)}/>
+                                    <IonInput required type = "password" label = "Password" labelPlacement="floating" fill = "outline" placeholder = "Password" className = "ion-margin-top" onIonChange={(e: any) => setPassword(e.target.value)}/>
                                     <IonButton type = 'submit' expand = "block" className = "ion-margin-top">
                                         Login
                                     {/* <IonIcon icon = {logInOutline}/> */}
