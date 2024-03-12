@@ -2,11 +2,22 @@ import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, 
 import React from 'react';
 import './ClassCard.css';
 import { ellipse } from 'ionicons/icons';
+
+function toStandardTime(militaryTime: string): string {
+    const timeParts = militaryTime.split(':');
+    const hour = parseInt(timeParts[0]);
+    const minute = timeParts[1];
+
+    return (hour > 12 ? hour - 12 : hour) + ':' + minute + (hour >= 12 ? ' PM' : ' AM');
+}
+
 interface ClassCardProps {
-    key: number;
-    course?: string;
-    prof?: string;
-    time?: string;
+    id: number;
+    course_name?: string;
+    course_title?: string;
+    time_start?: string;
+    time_end?: string;
+    professor?: string;
 }
 
 const ClassCard: React.FC<ClassCardProps> = (props) : JSX.Element => {
@@ -16,11 +27,14 @@ const ClassCard: React.FC<ClassCardProps> = (props) : JSX.Element => {
             <div className = "card-class-info">
                 <img src = "https://picsum.photos/50" className = "round-border card-class-icon"/>
                 <IonCardHeader>
-                    <IonCardTitle data-testid = {`class-card-${props.course}`}>{props.course}</IonCardTitle>
-                    {props.prof && <IonCardSubtitle>{`Prof. ${props.prof}`}</IonCardSubtitle>}
+                    <div className = "card-class-header">
+                        <IonCardTitle data-testid = {`class-card-${props.course_name}`}>{props.course_name}</IonCardTitle>
+                        <IonCardContent>{props.time_start && toStandardTime(props.time_start)}</IonCardContent>
+                    </div>
+                    <IonCardSubtitle>{props.course_title}</IonCardSubtitle>
+                    {props.professor && <IonCardSubtitle>{`Prof. ${props.professor}`}</IonCardSubtitle>}
                 </IonCardHeader>
             </div>
-            <IonCardContent>{props.time}</IonCardContent>
         </IonCard>
     );
 };

@@ -11,4 +11,25 @@
 .card-class-info{
     display: flex;
     align-items: center;
+    width: 100%;
+}
+
+.card-class-info > ion-card-header{
+    width: 100%;
+}
+
+.card-class-header{
+    display:flex;
+    align-items: baseline;
+    justify-content: space-between;
+    width: auto;
+}
+
+.card-class-header > ion-card-content{
+    margin: 0;
+    padding: 0;
+}
+
+.card-class-highlight{
+    background-color: black;
 }
