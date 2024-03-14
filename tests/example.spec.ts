@@ -13,7 +13,6 @@ async function successLogin(page: Page) {
   await page.getByLabel('PasswordPassword').click();
   await page.getByLabel('PasswordPassword').fill('testpassword');
   await page.getByRole('button', { name: 'Login' }).click();
-  await page.getByRole('button', { name: 'Login' }).click();
 }
 
 test('Successful login redirecting to dashboard', async ({ page }) => {
