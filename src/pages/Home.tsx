@@ -1,22 +1,25 @@
-import { IonContent, IonHeader, IonIcon, IonItem, IonMenu, IonMenuToggle, IonPage, IonRouterOutlet, IonSplitPane, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonIcon, IonItem, IonMenu, IonMenuToggle, IonPage, IonRouterOutlet, IonSplitPane, IonTitle, IonToolbar, useIonRouter } from '@ionic/react';
 import ExploreContainer from '../components/ExploreContainer';
 import { Redirect, Route } from 'react-router';
 import Dashboard from './Dashboard';
 import Settings from './Settings';
 import { homeOutline, logOutOutline, newspaperOutline } from 'ionicons/icons';
 import './Home.css';
-import Tab2 from './Scan';
-import Tab3 from './Profile';
-
+import supabase from '../config/supabaseClient';
 interface Token {
   token: any;
 }
 
 const Home: React.FC<Token> = ({token}) => {
+  const router = useIonRouter();
   const paths = [
     { name: 'Home', url: '/app/dashboard/view', icon: homeOutline },
     { name: 'Settings', url: '/app/settings', icon: newspaperOutline },
   ]
+  const signOut = async () => {
+    sessionStorage.removeItem('token');
+    router.push('/', 'forward', 'replace');
+  }
   console.log('Home');
   return (
     <IonPage>
@@ -37,9 +40,9 @@ const Home: React.FC<Token> = ({token}) => {
               </IonMenuToggle>
               ))}
               <IonMenuToggle autoHide = { false }>
-                  <IonItem detail = {false} routerLink = "/" routerDirection = "root">
-                  <IonIcon slot = "start" icon = {logOutOutline} />
-                  Logout
+                  <IonItem detail = {false} routerLink = "/" routerDirection = "root" onClick={signOut}>
+                    <IonIcon slot = "start" icon = {logOutOutline} />
+                    Logout
                   </IonItem>
               </IonMenuToggle>
           </IonContent>
