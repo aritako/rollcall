@@ -1,0 +1,5 @@
+class_id,name,curr_sessions,max_absences,start_time,end_time,enrollment_key
+1,CS 192,4,6,08:00:00,10:00:00,191192195
+2,CS 145 Lec,45,6,13:00:00,14:30:00,2021140145
+3,CS 145 Lab 4,12,6,13:00:00,16:00:00,145444
+4,STS 1 WFY,2,4,16:00:00,17:30:00,12344321
