@@ -16,6 +16,52 @@ async function successLogin(page: Page) {
   await page.getByRole('button', { name: 'Login' }).click();
 }
 
+test('Unsuccessful signup: unavailable UP Email', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Next' }).first().click();
+  await page.getByRole('button', { name: 'Next' }).nth(1).click();
+  await page.getByRole('button', { name: 'Finish' }).click();
+  await page.getByRole('link', { name: 'Create Account' }).click();
+  await page.getByLabel('Student NumberStudent Number').fill('202107015');
+  await page.getByLabel('First NameFirst Name').click();
+  await page.getByLabel('First NameFirst Name').fill('Antonio');
+  await page.getByLabel('Last NameLast Name').click();
+  await page.getByLabel('Last NameLast Name').fill('Torres');
+  await page.getByRole('textbox', { name: 'UP Email' }).click();
+  await page.getByRole('textbox', { name: 'UP Email' }).fill('cratienza1@up.edu.ph');
+  await page.getByRole('textbox', { name: 'Password' }).click();
+  await page.getByRole('textbox', { name: 'Password' }).fill('testpassword');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  page.on("dialog", async (alert) => {
+    const text = alert.message();
+    await expect(text == 'User already registered');
+    await alert.accept();
+})
+});
+
+test('Successful signup', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Next' }).first().click();
+  await page.getByRole('button', { name: 'Next' }).nth(1).click();
+  await page.getByRole('button', { name: 'Finish' }).click();
+  await page.getByRole('link', { name: 'Create Account' }).click();
+  await page.getByLabel('Student NumberStudent Number').fill('202107015');
+  await page.getByLabel('First NameFirst Name').click();
+  await page.getByLabel('First NameFirst Name').fill('Antonio');
+  await page.getByLabel('Last NameLast Name').click();
+  await page.getByLabel('Last NameLast Name').fill('Torres');
+  await page.getByRole('textbox', { name: 'UP Email' }).click();
+  await page.getByRole('textbox', { name: 'UP Email' }).fill('astorres1@up.edu.ph');
+  await page.getByRole('textbox', { name: 'Password' }).click();
+  await page.getByRole('textbox', { name: 'Password' }).fill('testpassword');
+  await page.getByRole('button', { name: 'Submit' }).click();
+  page.on("dialog", async (alert) => {
+    const text = alert.message();
+    await expect(text == 'User Registration Success');
+    await alert.accept();
+})
+});
+
 test('Successful login redirecting to dashboard', async ({ page }) => {
   await page.goto('/');
   successLogin(page);
