@@ -18,6 +18,7 @@ const Home: React.FC<Token> = ({token}) => {
   ]
   const signOut = async () => {
     sessionStorage.removeItem('token');
+    await supabase.auth.signOut();
     router.push('/', 'forward', 'replace');
   }
   console.log('Home');

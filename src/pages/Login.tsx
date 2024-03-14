@@ -19,6 +19,9 @@ const Login: React.FC<LoginProps> = ({setToken}) => {
         email: "",
         password: ""
     });
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    console.log(formData)
     // Check for preferences
     useEffect(() => {
         const checkStorage = async () => {
@@ -32,27 +35,26 @@ const Login: React.FC<LoginProps> = ({setToken}) => {
         setFormData((prevData) => {
             return {
                 ...prevData,
-                [event.target.name]: event.target.value
+                [event.target.name]: event.target.value ?? ''
             }
         })
     }
-    console.log(formData)
+
+   
     
     const doLogin = async (event: any) =>{
         event.preventDefault();
-        try{
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: formData.email,
-                password: formData.password,
-            })
-            if (error) throw error;
+        console.log("EMAIL PASSED: ", formData.email, "PASSWORD PASSED: " ,formData.password);
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: formData.email,
+            password: formData.password,
+        })
+        if (error) alert("Invalid Login!");
+        else{
             setToken(data)
-            router.push('/app', 'root')
-        } catch(error){
-            alert("Invalid Login!");
+            router.push('/app', 'root') 
         }
 
-          
         // await present('Logging in...');
         // setTimeout(() => {
         //     dismiss();
@@ -100,15 +102,16 @@ const Login: React.FC<LoginProps> = ({setToken}) => {
                     <IonCol size = '12' sizeMd = '8' sizeLg = '6' sizeXl = "4">
                         <IonCard>
                             <IonCardContent>
-                                <form onSubmit = {doLogin}>
+                                <form onSubmit={doLogin}>
                                     <IonInput required 
                                         name = "email" 
                                         type = "email" 
                                         label = "UP Email" 
                                         labelPlacement="floating" 
                                         fill = "outline" 
-                                        placeholder = "UP Email" 
-                                        onIonChange={handleChange}/>
+                                        placeholder = "UP Email"
+                                        onIonChange = {handleChange} 
+                                        />
                                     <IonInput required 
                                         name = "password" 
                                         type = "password" 
@@ -116,11 +119,13 @@ const Login: React.FC<LoginProps> = ({setToken}) => {
                                         labelPlacement="floating" 
                                         fill = "outline" 
                                         placeholder = "Password" 
-                                        className = "ion-margin-top" 
-                                        onIonChange={handleChange}/>
+                                        className = "ion-margin-top"
+                                        onIonInput = {handleChange} 
+                                        
+                                        />
                                     <IonButton type = 'submit' expand = "block" className = "ion-margin-top">
                                         Login
-                                    {/* <IonIcon icon = {logInOutline}/> */}
+                                    <IonIcon icon = {logInOutline}/>
                                     </IonButton>
                                 </form>
                                 <IonButton color = "tertiary" routerLink = "/register" type = 'submit' expand = "block" className = "ion-margin-top">

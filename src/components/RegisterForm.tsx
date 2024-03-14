@@ -120,7 +120,7 @@ const RegisterForm: React.FC = () =>{
                                     onIonBlur={() => markTouchedEmail()}
                                     onIonChange={handleChange}
                                 />
-                                <IonInput required name = "password" type = "password" label = "Password" labelPlacement="floating" fill = "outline" placeholder = "Password" className = "ion-margin-top" onIonChange={handleChange}/>
+                                <IonInput required name = "password" type = "password" label = "Password" labelPlacement="floating" fill = "outline" placeholder = "Password" className = "ion-margin-top" onIonInput={handleChange}/>
                                 <IonButton type = 'submit' expand = "block" className = "ion-margin-top">
                                     Submit
                                 {/* <IonIcon icon = {logInOutline}/> */}
