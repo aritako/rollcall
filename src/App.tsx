@@ -23,21 +23,42 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import { useState, useEffect } from 'react';
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/">
-          <Login />
-        </Route>
-        <Route component = { Register } path = "/register" exact />
-        <Route component = { Home } path = "/app"></Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
+const App: React.FC = () => {
+  const [token, setToken] = useState(false);
+
+  if(token){
+    sessionStorage.setItem('token', JSON.stringify(token));
+  }
+
+  useEffect(() => {
+    if(sessionStorage.getItem('token')){
+      setToken(JSON.parse(sessionStorage.getItem('token')!))
+    }
+  },[])
+
+  return (
+    <IonApp>
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Route exact path="/">
+            <Login setToken ={setToken}/>
+          </Route>
+          <Route component={Register} path="/register" exact />
+          {token ? 
+            <Route path="/app">
+              <Home token = {token}/>
+            </Route>
+            : 
+            <Redirect to = "/"/>
+          }
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 export default App;

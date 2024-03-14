@@ -1,36 +1,24 @@
-import { 
-    IonContent, 
-    IonFooter, 
-    IonHeader, 
-    IonPage, 
-    IonTitle, 
-    IonToolbar, 
-    IonCard, 
-    IonCardContent, 
-    IonInput,
-    IonButton,
-    IonIcon,
-    useIonRouter,
-    useIonLoading,
-    IonCol,
-    IonGrid,
-    IonRow, 
-} from '@ionic/react';
-import {
-    logInOutline
-} from 'ionicons/icons';
+import { IonContent, IonFooter, IonHeader, IonPage, IonTitle, IonToolbar, IonCard, IonCardContent, IonInput, IonButton, IonIcon, useIonRouter, useIonLoading, IonCol, IonGrid, IonRow } from '@ionic/react';
+import {logInOutline} from 'ionicons/icons';
 import React, {useEffect, useState} from 'react';
 import Intro from '../components/Intro';
 import { Preferences } from '@capacitor/preferences';
 import logoSample from '../assets/sample/logo-sample.png';
+import supabase from '../config/supabaseClient';
 const INTRO_KEY = 'intro-seen';
 
-const Login: React.FC = () => {
+interface LoginProps {
+    setToken: (token: any) => void;
+}
+
+const Login: React.FC<LoginProps> = ({setToken}) => {
     const [introSeen, setIntroSeen] = useState(true);
     const router = useIonRouter();
     const [present, dismiss] = useIonLoading();
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [formData, setFormData] = useState({
+        email: "",
+        password: ""
+    });
     // Check for preferences
     useEffect(() => {
         const checkStorage = async () => {
@@ -38,18 +26,41 @@ const Login: React.FC = () => {
           setIntroSeen(seen.value === 'true');
         };
         checkStorage();
-      }, []);
-
+    }, []);
+    
+    const handleChange = (event : any) => {
+        setFormData((prevData) => {
+            return {
+                ...prevData,
+                [event.target.name]: event.target.value
+            }
+        })
+    }
+    console.log(formData)
+    
     const doLogin = async (event: any) =>{
         event.preventDefault();
-        await present('Logging in...');
-        setTimeout(() => {
-            dismiss();
-            router.push('/app','forward')
-        }, 1000);
-        // INSERT LOGIN LOGIC HERE
-        console.log('doLogin');
-        //router.push('/home', 'root') 
+        try{
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: formData.email,
+                password: formData.password,
+            })
+            if (error) throw error;
+            setToken(data)
+            router.push('/app', 'root')
+        } catch(error){
+            alert("Invalid Login!");
+        }
+
+          
+        // await present('Logging in...');
+        // setTimeout(() => {
+        //     dismiss();
+        //     router.push('/app','forward')
+        // }, 1000);
+        // // INSERT LOGIN LOGIC HERE
+        // console.log('doLogin');
+        // //router.push('/home', 'root') 
     }
 
     const finishIntro = async () => {
@@ -90,17 +101,28 @@ const Login: React.FC = () => {
                         <IonCard>
                             <IonCardContent>
                                 <form onSubmit = {doLogin}>
-                                    <IonInput required type = "email" label = "UP Email" labelPlacement="floating" fill = "outline" placeholder = "UP Email" onIonChange={(e: any) => setUsername(e.target.value)}/>
-                                    <IonInput required type = "password" label = "Password" labelPlacement="floating" fill = "outline" placeholder = "Password" className = "ion-margin-top" onIonChange={(e: any) => setPassword(e.target.value)}/>
+                                    <IonInput required 
+                                        name = "email" 
+                                        type = "email" 
+                                        label = "UP Email" 
+                                        labelPlacement="floating" 
+                                        fill = "outline" 
+                                        placeholder = "UP Email" 
+                                        onIonChange={handleChange}/>
+                                    <IonInput required 
+                                        name = "password" 
+                                        type = "password" 
+                                        label = "Password" 
+                                        labelPlacement="floating" 
+                                        fill = "outline" 
+                                        placeholder = "Password" 
+                                        className = "ion-margin-top" 
+                                        onIonChange={handleChange}/>
                                     <IonButton type = 'submit' expand = "block" className = "ion-margin-top">
                                         Login
                                     {/* <IonIcon icon = {logInOutline}/> */}
                                     </IonButton>
                                 </form>
-                                {/* replace with ionic tutorial page */}
-                                <IonButton color = "tertiary" routerLink = "/register" type = 'submit' expand = "block" className = "ion-margin-top">
-                                        Login with Magic Link
-                                </IonButton>
                                 <IonButton color = "tertiary" routerLink = "/register" type = 'submit' expand = "block" className = "ion-margin-top">
                                         Create Account
                                 </IonButton>

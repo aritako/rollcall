@@ -8,7 +8,11 @@ import './Home.css';
 import Tab2 from './Scan';
 import Tab3 from './Profile';
 
-const Home: React.FC = () => {
+interface Token {
+  token: any;
+}
+
+const Home: React.FC<Token> = ({token}) => {
   const paths = [
     { name: 'Home', url: '/app/dashboard/view', icon: homeOutline },
     { name: 'Settings', url: '/app/settings', icon: newspaperOutline },
