@@ -66,25 +66,24 @@ const RegisterForm: React.FC = () =>{
 
     async function doSignUp(event: any){
         event.preventDefault();
-        try {
-            const { data, error } = await supabase.auth.signUp(
-                {
-                  email: formData.email,
-                  password: formData.password,
-                  options: {
-                    data: {
-                        student_number: formData.student_number,
-                        first_name: formData.first_name,
-                        last_name: formData.last_name,
-                        display_name: formData.first_name + " " + formData.last_name,
-                    }
-                  }
+        const { data, error } = await supabase.auth.signUp(
+            {
+                email: formData.email,
+                password: formData.password,
+                options: {
+                data: {
+                    student_number: formData.student_number,
+                    first_name: formData.first_name,
+                    last_name: formData.last_name,
+                    display_name: formData.first_name + " " + formData.last_name,
                 }
-              )
-              if (error) throw error
-              alert("Check your email for the confirmation link!")
-        } catch (error){
-            alert(error)
+                }
+            }
+            )
+            if (error){
+            alert(error.message)
+            } else{
+            alert("User Registration Success!")
         }
 
     }
