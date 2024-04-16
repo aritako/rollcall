@@ -91,7 +91,7 @@ const Login: React.FC<LoginProps> = ({setToken}) => {
         <IonContent scrollY={false} className = "ion-padding">
             <IonGrid fixed>
                 <IonRow class = "ion-justify-content-center">
-                    <IonCol size = '12' sizeMd = '8' sizeLg = '6' sizeXl = "4">
+                    <IonCol size = '8' sizeMd = '6' sizeLg = '4' sizeXl = "2">
                         <div className = "ion-text-center ion-padding">
                         <img src = {logoSample} alt = "RollCall Logo" style = {{width: '50%'}}/>
                         </div>
