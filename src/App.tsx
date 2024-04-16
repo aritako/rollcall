@@ -24,33 +24,38 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import { useState, useEffect } from 'react';
+import supabase from './config/supabaseClient';
+import { Session } from '@supabase/supabase-js';
 
 setupIonicReact();
 
 const App: React.FC = () => {
-  const [token, setToken] = useState(false);
+  const [session, setSession] = useState<Session | null>(null)
 
-  if(token){
-    sessionStorage.setItem('token', JSON.stringify(token));
-  }
+    useEffect(() => {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        setSession(session)
+      })
 
-  useEffect(() => {
-    if(sessionStorage.getItem('token')){
-      setToken(JSON.parse(sessionStorage.getItem('token')!))
-    }
-  },[])
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((_event, session) => {
+        setSession(session)
+      })
 
+      return () => subscription.unsubscribe()
+    }, [])
   return (
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
           <Route exact path="/">
-            <Login setToken ={setToken}/>
+            <Login />
           </Route>
           <Route component={Register} path="/register" exact />
-          {token ? 
+          {session ? 
             <Route path="/app">
-              <Home token = {token}/>
+              <Home/>
             </Route>
             : 
             <Redirect to = "/"/>

@@ -6,22 +6,22 @@ import Settings from './Settings';
 import { homeOutline, logOutOutline, newspaperOutline } from 'ionicons/icons';
 import './Home.css';
 import supabase from '../config/supabaseClient';
-interface Token {
-  token: any;
-}
+import { useState, useEffect } from 'react';
+import { Session } from '@supabase/supabase-js';
 
-const Home: React.FC<Token> = ({token}) => {
+const Home: React.FC = () => {
   const router = useIonRouter();
+  
   const paths = [
     { name: 'Home', url: '/app/dashboard/view', icon: homeOutline },
     { name: 'Settings', url: '/app/settings', icon: newspaperOutline },
   ]
   const signOut = async () => {
-    sessionStorage.removeItem('token');
+    // sessionStorage.removeItem('token');
     await supabase.auth.signOut();
     router.push('/', 'forward', 'replace');
   }
-  console.log('Home');
+  // console.log('Home');
   return (
     <IonPage>
       <IonSplitPane contentId = 'main' when = "xl">

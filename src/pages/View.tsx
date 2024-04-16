@@ -19,7 +19,7 @@ type Class = {
 const View: React.FC = () => {
     const [fetchError, setFetchError] : Array<any> = useState(null)
     const [courses, setCourses] : Array<any> = useState(null)
-
+    
     useEffect(() => {
         const fetchClasses = async () => {
             const { data, error } = await supabase
