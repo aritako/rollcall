@@ -34,10 +34,12 @@ const View: React.FC = () => {
     
     useEffect(() => {
         const fetchClasses = async () => {
+            const { data: { user } } = await supabase.auth.getUser()
             const { data, error } = await supabase
-            .from('sample_class')
+            .from('enrollment_view')
             .select()
-            
+            .eq('student_number', user?.user_metadata?.student_number)
+
             if (error) {
                 setFetchError("An error occurred while fetching classes")
                 setCourses(null)
