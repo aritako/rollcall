@@ -6,7 +6,7 @@ import './Dashboard.css';
 import UserImage from '../assets/user.png'
 import { settingsOutline } from 'ionicons/icons';
 import supabase from '../config/supabaseClient';
-import { Session } from '@supabase/supabase-js';
+import { Session, UserMetadata } from '@supabase/supabase-js';
 
 type Class = {
     id: number;
@@ -21,11 +21,12 @@ const View: React.FC = () => {
     const [fetchError, setFetchError] : Array<any> = useState(null)
     const [courses, setCourses] : Array<any> = useState(null)
     const [session, setSession] = useState<Session | null>(null)
-
+    const [metadata, setMetadata] = useState<UserMetadata | null | undefined>(null)
     useEffect(() => {
         const fetchSession = async () => {
         supabase.auth.getSession().then(({ data: { session } }) => {
             setSession(session)
+            setMetadata(session?.user?.user_metadata)
         })
         };
         fetchSession();
@@ -67,7 +68,7 @@ const View: React.FC = () => {
                         src= {UserImage} alt="User" 
                         className = "icon-profile"
                     />
-                    <IonTitle color = {'dark'} className = "font-medium">Hello, {session?.user?.user_metadata?.first_name}!</IonTitle>
+                    <IonTitle color = {'dark'} className = "font-medium">Hello, {metadata?.first_name ? metadata.first_name : 'User'}!</IonTitle>
                     <IonButton fill = "outline" className = "settings-button">
                         <IonIcon icon = {settingsOutline} className = "settings-button-ion-icon"></IonIcon>
                     </IonButton>

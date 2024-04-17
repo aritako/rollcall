@@ -11,7 +11,7 @@ import { Session } from '@supabase/supabase-js';
 
 const Home: React.FC = () => {
   const router = useIonRouter();
-  
+  const [session, setSession] = useState<Session | null>(null)
   const paths = [
     { name: 'Home', url: '/app/dashboard/view', icon: homeOutline },
     { name: 'Settings', url: '/app/settings', icon: newspaperOutline },
@@ -21,7 +21,7 @@ const Home: React.FC = () => {
     await supabase.auth.signOut();
     router.push('/', 'forward', 'replace');
   }
-  // console.log('Home');
+  
   return (
     <IonPage>
       <IonSplitPane contentId = 'main' when = "xl">
