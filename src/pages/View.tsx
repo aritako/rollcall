@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import ClassCard from '../components/ClassCard';
 import Dashboard from './Dashboard';
@@ -82,6 +82,25 @@ const View: React.FC = () => {
                         {...item}
                     />
                 ))}
+                <IonCard className = "card-class round-border">
+                    <div className = "flex align-center ion-margin-vertical">
+                        <h1 className="font-heavy">Enroll in a class</h1>
+                    </div>
+                    <div>
+                        <form>
+                            <IonInput required 
+                                label = "Place Enrollment Key" 
+                                labelPlacement="floating" 
+                                fill = "outline" 
+                                placeholder = "Enrollment Key"
+                                
+                                />
+                        </form>
+                    </div>
+                    <IonButton type = 'submit' expand = "block" className = "ion-margin-top">
+                        Enroll
+                    </IonButton>
+                </IonCard>
             </IonContent>
         </IonPage>
     );
