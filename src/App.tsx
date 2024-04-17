@@ -1,4 +1,4 @@
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, useHistory } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
@@ -24,37 +24,50 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import { useState, useEffect } from 'react';
+import supabase from './config/supabaseClient';
+import { Session } from '@supabase/supabase-js';
 
 setupIonicReact();
 
 const App: React.FC = () => {
-  const [token, setToken] = useState(false);
-
-  if(token){
-    sessionStorage.setItem('token', JSON.stringify(token));
-  }
-
+  const [session, setSession] = useState<Session | null>(null)
+  const [loading, setLoading] = useState(true);
+  const history = useHistory();
+  
   useEffect(() => {
-    if(sessionStorage.getItem('token')){
-      setToken(JSON.parse(sessionStorage.getItem('token')!))
-    }
-  },[])
+    const fetchSession = async () => {
+      const { data: {session}, error } = await supabase.auth.getSession();
+      if (error) {
+        console.error('Error fetching session:', error.message);
+        setLoading(false);
+        return;
+      }
+      setSession(session);
+      setLoading(false);
+    };
 
+    fetchSession();
+
+    const { data: {subscription} } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+  console.log("CURRENT SESSION:", session)
+  if (loading) {
+    return null; // Render nothing while loading
+  }
   return (
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
-          <Route exact path="/">
-            <Login setToken ={setToken}/>
-          </Route>
           <Route component={Register} path="/register" exact />
-          {token ? 
-            <Route path="/app">
-              <Home token = {token}/>
-            </Route>
-            : 
-            <Redirect to = "/"/>
-          }
+          <Route component= {Login} path="/login" exact />
+          <Route path="/app">
+            {session ? <Home /> : <Redirect to="/login" />}
+          </Route>
+          <Redirect exact from="/" to={session ? "/app" : "/login"} />
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>

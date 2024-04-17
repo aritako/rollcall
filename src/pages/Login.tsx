@@ -5,13 +5,10 @@ import Intro from '../components/Intro';
 import { Preferences } from '@capacitor/preferences';
 import logoSample from '../assets/sample/logo-sample.png';
 import supabase from '../config/supabaseClient';
+import { Session } from '@supabase/supabase-js';
 const INTRO_KEY = 'intro-seen';
 
-interface LoginProps {
-    setToken: (token: any) => void;
-}
-
-const Login: React.FC<LoginProps> = ({setToken}) => {
+const Login: React.FC = () => {
     const [introSeen, setIntroSeen] = useState(true);
     const router = useIonRouter();
     const [present, dismiss] = useIonLoading();
@@ -19,9 +16,17 @@ const Login: React.FC<LoginProps> = ({setToken}) => {
         email: "",
         password: ""
     });
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    console.log(formData)
+    const [session, setSession] = useState<Session | null>(null)
+
+    useEffect(() => {
+        const fetchSession = async () => {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session)
+        })
+        };
+        fetchSession();
+    }, []);
+    
     // Check for preferences
     useEffect(() => {
         const checkStorage = async () => {
@@ -40,8 +45,6 @@ const Login: React.FC<LoginProps> = ({setToken}) => {
         })
     }
 
-   
-    
     const doLogin = async (event: any) =>{
         event.preventDefault();
         console.log("EMAIL PASSED: ", formData.email, "PASSWORD PASSED: " ,formData.password);
@@ -51,18 +54,8 @@ const Login: React.FC<LoginProps> = ({setToken}) => {
         })
         if (error) alert("Invalid Login!");
         else{
-            setToken(data)
             router.push('/app', 'root') 
         }
-
-        // await present('Logging in...');
-        // setTimeout(() => {
-        //     dismiss();
-        //     router.push('/app','forward')
-        // }, 1000);
-        // // INSERT LOGIN LOGIC HERE
-        // console.log('doLogin');
-        // //router.push('/home', 'root') 
     }
 
     const finishIntro = async () => {

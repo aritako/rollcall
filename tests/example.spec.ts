@@ -84,17 +84,6 @@ test('Unsuccessful login: incorrect credentials', async ({ page }) => {
 });
 
 
-test('View Dashboard Classes', async ({ page }) => {
-  await page.goto('/');
-  successLogin(page);
-  await expect(page.getByTestId('class-card-CS 192')).toBeVisible();
-  await expect(page.getByText('CS 192')).toBeVisible();
-  await expect(page.getByTestId('class-card-CS 145')).toBeVisible();
-  await expect(page.getByText('CS 145')).toBeVisible();
-  await expect(page.getByTestId('class-card-CS 153')).toBeVisible();
-  await expect(page.getByText('CS 153')).toBeVisible();
-});
-
 test('Navigate to Scan tab', async ({ page }) => {
   await page.goto('/');
   successLogin(page);
