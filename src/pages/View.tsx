@@ -143,7 +143,7 @@ const View: React.FC = () => {
         }
 
     }
-    console.log(metadata)
+    // console.log(metadata)
     return (
         <IonPage>
             <IonHeader>
