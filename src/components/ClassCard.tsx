@@ -1,4 +1,4 @@
-import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonLabel, IonPage, IonRow, IonTitle, IonToolbar } from '@ionic/react';
+import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonLabel, IonPage, IonRow, IonTitle, IonToolbar, useIonRouter } from '@ionic/react';
 import React from 'react';
 import './ClassCard.css';
 import { ellipse } from 'ionicons/icons';
@@ -21,9 +21,8 @@ interface ClassCardProps {
 }
 
 const ClassCard: React.FC<ClassCardProps> = (props) : JSX.Element => {
-    
     return (
-        <IonCard className = "card-class round-border">
+        <IonCard className = "main-card card-class round-border" routerLink={`/app/dashboard/view/${props.id}`}>
             <div className = "card-class-info">
                 <img src = "https://picsum.photos/50" className = "round-border card-class-icon"/>
                 <IonCardHeader>
