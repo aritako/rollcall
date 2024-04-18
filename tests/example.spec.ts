@@ -143,5 +143,17 @@ test('Professor logs in account', async ({ page }) => {
   await page.getByLabel('PasswordPassword').click();
   await page.getByLabel('PasswordPassword').fill('testpassword');
   await page.getByRole('button', { name: 'Login' }).click();
-  await expect(page.getByRole('banner').getByText('Dashboard')).toBeVisible();
+  await expect(page.getByText('Professor')).toBeVisible();
+});
+
+test('Professor clicks a class', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Next' }).first().click();
+  await page.getByRole('button', { name: 'Next' }).nth(1).click();
+  await page.getByRole('button', { name: 'Finish' }).click();
+  await page.getByLabel('UP EmailUP Email').fill('professor@gmail.com');
+  await page.getByLabel('PasswordPassword').click();
+  await page.getByLabel('PasswordPassword').fill('testpassword');
+  await page.getByRole('button', { name: 'Login' }).click();  await page.getByText('CS 1927:30 AMSoftware').click();
+  await expect(page.getByRole('heading', { name: 'Class List' })).toBeVisible();
 });
