@@ -48,12 +48,12 @@ const View: React.FC = () => {
         }
     }
     
-        function handleRefresh(event: CustomEvent<RefresherEventDetail>) {
-          setTimeout(() => {
-            fetchClasses()
-            event.detail.complete();
-          }, 2000);
-        }
+    function handleRefresh(event: CustomEvent<RefresherEventDetail>) {
+        setTimeout(() => {
+        fetchClasses()
+        event.detail.complete();
+        }, 2000);
+    }
     
 
     const handleChange = (event : any) => {
@@ -127,7 +127,7 @@ const View: React.FC = () => {
         }
 
     }
-
+    console.log(metadata)
     return (
         <IonPage>
             <IonHeader>
@@ -151,21 +151,17 @@ const View: React.FC = () => {
                         />
                         <div className = "user-greeting">
                             <IonTitle color = {'dark'} className = "font-medium">Hello, {metadata?.first_name ? metadata.first_name : 'User'}!</IonTitle>
-                            {metadata?.user_type === 'professor' ? <IonText>Professor</IonText> : <p>Student</p>}
+                            {metadata?.user_type === 'professor' ? <IonText>Professor</IonText> : <IonText>Student</IonText>}
                         </div>
                     </div>
                     <IonButton fill = "outline" className = "settings-button">
                         <IonIcon icon = {settingsOutline} className = "settings-button-ion-icon"></IonIcon>
                     </IonButton>
                 </div>
+                {metadata?.user_type === "student" && (
                 <IonCard className = "card-class round-border">
                     <div className = "flex align-center ion-margin-vertical">
-                        {metadata?.user_type === 'professor' ? 
-                        <h4>Add a new Class</h4>
-                        :
                         <h4>Enroll in a Class</h4>
-                        }
-                        
                     </div>
                     <div>
                         <form onSubmit={addClass}>
@@ -184,7 +180,7 @@ const View: React.FC = () => {
                         </form>
                     </div>
                     
-                </IonCard>
+                </IonCard>)}
                 <h1 className="font-heavy">Your Classes</h1>
                 {courses && courses.map((item: Class) => (
                     <ClassCard
