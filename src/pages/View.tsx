@@ -32,10 +32,18 @@ const View: React.FC = () => {
 
     const fetchClasses = async () => {
         const { data: { user } } = await supabase.auth.getUser()
+
+        let viewName = 'enrollment_view';
+        let idColumnName = 'student_number';
+        if (user?.user_metadata?.user_type == 'professor') {  
+            viewName = 'teaching_view';
+            idColumnName = 'professor_id';
+        }
+
         const { data, error } = await supabase
-        .from('enrollment_view')
+        .from(viewName)
         .select()
-        .eq('student_number', user?.user_metadata?.student_number)
+        .eq(idColumnName, user?.user_metadata?.student_number);
 
         if (error) {
             setFetchError("An error occurred while fetching classes")
@@ -92,11 +100,19 @@ const View: React.FC = () => {
     useEffect(() => {
         const fetchClasses = async () => {
             const { data: { user } } = await supabase.auth.getUser()
-            const { data, error } = await supabase
-            .from('enrollment_view')
-            .select()
-            .eq('student_number', user?.user_metadata?.student_number)
 
+            let viewName = 'enrollment_view';
+            let idColumnName = 'student_number';
+            if (user?.user_metadata?.user_type == 'professor') {  
+                viewName = 'teaching_view';
+                idColumnName = 'professor_id';
+            }
+    
+            const { data, error } = await supabase
+            .from(viewName)
+            .select()
+            .eq(idColumnName, user?.user_metadata?.student_number);
+    
             if (error) {
                 setFetchError("An error occurred while fetching classes")
                 setCourses(null)
@@ -127,7 +143,7 @@ const View: React.FC = () => {
         }
 
     }
-    console.log(metadata)
+    // console.log(metadata)
     return (
         <IonPage>
             <IonHeader>
