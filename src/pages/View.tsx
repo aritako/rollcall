@@ -1,9 +1,11 @@
 import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonMenuButton, IonPage, IonTitle, IonToolbar, IonRefresher,
-    IonRefresherContent, RefresherEventDetail,} from '@ionic/react';
+    IonRefresherContent, RefresherEventDetail,
+    IonText,} from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import ClassCard from '../components/ClassCard';
 import Dashboard from './Dashboard';
 import './Dashboard.css';
+import './View.css';
 import UserImage from '../assets/user.png'
 import { compassSharp, settingsOutline } from 'ionicons/icons';
 import supabase from '../config/supabaseClient';
@@ -141,19 +143,29 @@ const View: React.FC = () => {
             <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
-                <div className = "flex align-center ion-margin-vertical">
-                    <img 
-                        src= {UserImage} alt="User" 
-                        className = "icon-profile"
-                    />
-                    <IonTitle color = {'dark'} className = "font-medium">Hello, {metadata?.first_name ? metadata.first_name : 'User'}!</IonTitle>
+                <div className = "dashboard-header flex align-center ion-margin-vertical">
+                    <div className = "parent-user-header">
+                        <img 
+                            src= {UserImage} alt="User" 
+                            className = "icon-profile"
+                        />
+                        <div className = "user-greeting">
+                            <IonTitle color = {'dark'} className = "font-medium">Hello, {metadata?.first_name ? metadata.first_name : 'User'}!</IonTitle>
+                            {metadata?.user_type === 'professor' ? <IonText>Professor</IonText> : <p>Student</p>}
+                        </div>
+                    </div>
                     <IonButton fill = "outline" className = "settings-button">
                         <IonIcon icon = {settingsOutline} className = "settings-button-ion-icon"></IonIcon>
                     </IonButton>
                 </div>
                 <IonCard className = "card-class round-border">
                     <div className = "flex align-center ion-margin-vertical">
-                        <h4>Enroll in a class</h4>
+                        {metadata?.user_type === 'professor' ? 
+                        <h4>Add a new Class</h4>
+                        :
+                        <h4>Enroll in a Class</h4>
+                        }
+                        
                     </div>
                     <div>
                         <form onSubmit={addClass}>
