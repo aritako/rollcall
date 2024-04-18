@@ -114,7 +114,7 @@ const RegisterForm: React.FC = () =>{
                                 <IonInput 
                                     required name = "student_number" 
                                     type = "text" 
-                                    label = "Student Number" 
+                                    label = "UP ID Number" 
                                     labelPlacement="floating" 
                                     fill = "outline" 
                                     placeholder = "Student Number" 
