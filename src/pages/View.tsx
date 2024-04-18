@@ -4,7 +4,7 @@ import ClassCard from '../components/ClassCard';
 import Dashboard from './Dashboard';
 import './Dashboard.css';
 import UserImage from '../assets/user.png'
-import { settingsOutline } from 'ionicons/icons';
+import { compassSharp, settingsOutline } from 'ionicons/icons';
 import supabase from '../config/supabaseClient';
 import { Session, UserMetadata } from '@supabase/supabase-js';
 
@@ -84,7 +84,7 @@ const View: React.FC = () => {
                 ))}
                 <IonCard className = "card-class round-border">
                     <div className = "flex align-center ion-margin-vertical">
-                        <h1 className="font-heavy">Enroll in a class</h1>
+                        <h4>Enroll in a class</h4>
                     </div>
                     <div>
                         <form>

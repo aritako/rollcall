@@ -8,6 +8,7 @@ import './Home.css';
 import supabase from '../config/supabaseClient';
 import { useState, useEffect } from 'react';
 import { Session } from '@supabase/supabase-js';
+import ViewDetails from './ViewDetails';
 
 const Home: React.FC = () => {
   const router = useIonRouter();
@@ -51,10 +52,8 @@ const Home: React.FC = () => {
       <IonRouterOutlet id = 'main'>
           <Route path = "/app/dashboard" component = {Dashboard} />
           <Route path = "/app/settings" component = {Settings} />
-          {/* <Route path = "/app/dashboard/scan" component = {Dashboard} />
+          <Route path = "/app/dashboard/scan" component = {Dashboard} />
           <Route path = "/app/dashboard/profile" component = {Dashboard} />
-          <Route path = "/app/settings/tab1" component = {Settings} />
-          <Route path = "/app/settings/tab2" component = {Settings} /> */}
           <Route exact path = "/app">
               <Redirect to = "/app/dashboard/view"/>
           </Route>

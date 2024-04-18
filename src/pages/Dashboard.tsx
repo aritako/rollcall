@@ -2,33 +2,35 @@ import { IonButtons, IonContent, IonHeader, IonIcon, IonLabel, IonMenuButton, Io
 import { triangle, ellipse, square } from 'ionicons/icons';
 import React from 'react';
 import { Route, Redirect } from 'react-router';
-import Tab1 from './View';
-import Tab2 from './Scan';
-import Tab3 from './Profile';
+import View from './View';
+import Scan from './Scan';
+import Profile from './Profile';
+import ViewDetails from './ViewDetails';
 
 const Dashboard: React.FC = () => {
 
     return (
         <IonTabs>
         <IonTabBar slot="bottom">
-          <IonTabButton tab="tab1" href="/app/dashboard/view">
+          <IonTabButton tab="View" href="/app/dashboard/view">
             <IonIcon icon={triangle} />
             <IonLabel>Dashboard</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab2" href="/app/dashboard/scan">
+          <IonTabButton tab="Scan" href="/app/dashboard/scan">
             <IonIcon icon={ellipse} />
             <IonLabel>Scan</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="tab3" href="/app/dashboard/profile">
+          <IonTabButton tab="Profile" href="/app/dashboard/profile">
             <IonIcon icon={square} />
             <IonLabel>Profile</IonLabel>
           </IonTabButton>
         </IonTabBar>
   
         <IonRouterOutlet>
-          <Route path="/app/dashboard/view" component={Tab1} />
-          <Route path="/app/dashboard/scan" component={Tab2} />
-          <Route path="/app/dashboard/profile" component={Tab3} />
+          <Route exact path="/app/dashboard/view" component={View} />
+          <Route exact path='/app/dashboard/view/:id' component={ViewDetails} />
+          <Route path="/app/dashboard/scan" component={Scan} />
+          <Route path="/app/dashboard/profile" component={Profile} />
           <Route exact path="/app/dashboard">
             <Redirect to="/app/dashboard/view" />
           </Route>
