@@ -95,7 +95,7 @@ test('Navigate to Scan tab', async ({ page }) => {
 test('Navigate to Profile tab', async ({ page }) => {
   await page.goto('/');
   successLogin(page);
-  await page.locator('#tab-button-tab3').getByText('Profile').click();
+  await page.locator('#tab-button-Profile').getByText('Profile').click();
   await expect(page.getByRole('banner').getByText('Profile')).toBeVisible();
 });
 
