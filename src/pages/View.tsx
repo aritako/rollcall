@@ -1,9 +1,11 @@
 import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonMenuButton, IonPage, IonTitle, IonToolbar, IonRefresher,
-    IonRefresherContent, RefresherEventDetail,} from '@ionic/react';
+    IonRefresherContent, RefresherEventDetail,
+    IonText,} from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import ClassCard from '../components/ClassCard';
 import Dashboard from './Dashboard';
 import './Dashboard.css';
+import './View.css';
 import UserImage from '../assets/user.png'
 import { compassSharp, settingsOutline } from 'ionicons/icons';
 import supabase from '../config/supabaseClient';
@@ -30,10 +32,18 @@ const View: React.FC = () => {
 
     const fetchClasses = async () => {
         const { data: { user } } = await supabase.auth.getUser()
+
+        let viewName = 'enrollment_view';
+        let idColumnName = 'student_number';
+        if (user?.user_metadata?.user_type == 'professor') {  
+            viewName = 'teaching_view';
+            idColumnName = 'professor_id';
+        }
+
         const { data, error } = await supabase
-        .from('enrollment_view')
+        .from(viewName)
         .select()
-        .eq('student_number', user?.user_metadata?.student_number)
+        .eq(idColumnName, user?.user_metadata?.student_number);
 
         if (error) {
             setFetchError("An error occurred while fetching classes")
@@ -46,12 +56,12 @@ const View: React.FC = () => {
         }
     }
     
-        function handleRefresh(event: CustomEvent<RefresherEventDetail>) {
-          setTimeout(() => {
-            fetchClasses()
-            event.detail.complete();
-          }, 2000);
-        }
+    function handleRefresh(event: CustomEvent<RefresherEventDetail>) {
+        setTimeout(() => {
+        fetchClasses()
+        event.detail.complete();
+        }, 2000);
+    }
     
 
     const handleChange = (event : any) => {
@@ -90,11 +100,19 @@ const View: React.FC = () => {
     useEffect(() => {
         const fetchClasses = async () => {
             const { data: { user } } = await supabase.auth.getUser()
-            const { data, error } = await supabase
-            .from('enrollment_view')
-            .select()
-            .eq('student_number', user?.user_metadata?.student_number)
 
+            let viewName = 'enrollment_view';
+            let idColumnName = 'student_number';
+            if (user?.user_metadata?.user_type == 'professor') {  
+                viewName = 'teaching_view';
+                idColumnName = 'professor_id';
+            }
+    
+            const { data, error } = await supabase
+            .from(viewName)
+            .select()
+            .eq(idColumnName, user?.user_metadata?.student_number);
+    
             if (error) {
                 setFetchError("An error occurred while fetching classes")
                 setCourses(null)
@@ -125,7 +143,7 @@ const View: React.FC = () => {
         }
 
     }
-
+    // console.log(metadata)
     return (
         <IonPage>
             <IonHeader>
@@ -141,19 +159,25 @@ const View: React.FC = () => {
             <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
-                <div className = "flex align-center ion-margin-vertical">
-                    <img 
-                        src= {UserImage} alt="User" 
-                        className = "icon-profile"
-                    />
-                    <IonTitle color = {'dark'} className = "font-medium">Hello, {metadata?.first_name ? metadata.first_name : 'User'}!</IonTitle>
+                <div className = "dashboard-header flex align-center ion-margin-vertical">
+                    <div className = "parent-user-header">
+                        <img 
+                            src= {UserImage} alt="User" 
+                            className = "icon-profile"
+                        />
+                        <div className = "user-greeting">
+                            <IonTitle color = {'dark'} className = "font-medium">Hello, {metadata?.first_name ? metadata.first_name : 'User'}!</IonTitle>
+                            {metadata?.user_type === 'professor' ? <IonText>Professor</IonText> : <IonText>Student</IonText>}
+                        </div>
+                    </div>
                     <IonButton fill = "outline" className = "settings-button">
                         <IonIcon icon = {settingsOutline} className = "settings-button-ion-icon"></IonIcon>
                     </IonButton>
                 </div>
+                {metadata?.user_type === "student" && (
                 <IonCard className = "card-class round-border">
                     <div className = "flex align-center ion-margin-vertical">
-                        <h4>Enroll in a class</h4>
+                        <h4>Enroll in a Class</h4>
                     </div>
                     <div>
                         <form onSubmit={addClass}>
@@ -172,7 +196,7 @@ const View: React.FC = () => {
                         </form>
                     </div>
                     
-                </IonCard>
+                </IonCard>)}
                 <h1 className="font-heavy">Your Classes</h1>
                 {courses && courses.map((item: Class) => (
                     <ClassCard

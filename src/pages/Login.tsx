@@ -54,7 +54,7 @@ const Login: React.FC = () => {
         })
         if (error) alert("Invalid Login!");
         else{
-            router.push('/app', 'root') 
+            router.push('/app', 'forward', 'replace'); 
         }
     }
 

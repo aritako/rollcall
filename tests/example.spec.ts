@@ -9,9 +9,9 @@ async function successLogin(page: Page) {
   await page.getByRole('button', { name: 'Next' }).first().click();
   await page.getByRole('button', { name: 'Next' }).nth(1).click();
   await page.getByRole('button', { name: 'Finish' }).click();
-  await page.getByLabel('UP EmailUP Email').fill('cratienza1@up.edu.ph');
+  await page.getByLabel('UP EmailUP Email').fill('astorres1@up.edu.ph');
   await page.getByLabel('PasswordPassword').click();
-  await page.getByLabel('PasswordPassword').fill('testpassword');
+  await page.getByLabel('PasswordPassword').fill('torres');
   await page.getByRole('button', { name: 'Login' }).click();
 }
 
@@ -99,3 +99,57 @@ test('Navigate to Profile tab', async ({ page }) => {
   await expect(page.getByRole('banner').getByText('Profile')).toBeVisible();
 });
 
+test('Student succesfully enrolls in class', async ({ page }) => {
+  await page.goto('/');
+  successLogin(page);
+  await page.getByLabel('Place Enrollment KeyPlace').fill('3');
+  await page.getByRole('button', { name: 'Enroll' }).click();
+  page.on("dialog", async (alert) => {
+    const text = alert.message();
+    await expect(text == 'Succesfully added class!');
+    await alert.accept();
+})
+});
+
+test('Student attempts to enroll in already enrolled class', async ({ page }) => {
+  await page.goto('/');
+  successLogin(page);
+  await page.getByLabel('Place Enrollment KeyPlace').fill('1');
+  await page.getByRole('button', { name: 'Enroll' }).click();
+  page.on("dialog", async (alert) => {
+    const text = alert.message();
+    await expect(text == 'duplicate key value violates unique constraint "learners_pkey"');
+    await alert.accept();
+})
+});
+
+test('Student clicks a class', async ({ page }) => {
+  await page.goto('/');
+  successLogin(page);
+  await page.getByText('CS 1927:30 AMSoftware').click();
+  await expect(page).toHaveURL('../app/dashboard/view/1');
+});
+
+test('Professor logs in account', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Next' }).first().click();
+  await page.getByRole('button', { name: 'Next' }).nth(1).click();
+  await page.getByRole('button', { name: 'Finish' }).click();
+  await page.getByLabel('UP EmailUP Email').fill('professor@gmail.com');
+  await page.getByLabel('PasswordPassword').click();
+  await page.getByLabel('PasswordPassword').fill('testpassword');
+  await page.getByRole('button', { name: 'Login' }).click();
+  await expect(page.getByText('Professor')).toBeVisible();
+});
+
+test('Professor clicks a class', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Next' }).first().click();
+  await page.getByRole('button', { name: 'Next' }).nth(1).click();
+  await page.getByRole('button', { name: 'Finish' }).click();
+  await page.getByLabel('UP EmailUP Email').fill('professor@gmail.com');
+  await page.getByLabel('PasswordPassword').click();
+  await page.getByLabel('PasswordPassword').fill('testpassword');
+  await page.getByRole('button', { name: 'Login' }).click();  await page.getByText('CS 1927:30 AMSoftware').click();
+  await expect(page.getByRole('heading', { name: 'Class List' })).toBeVisible();
+});
