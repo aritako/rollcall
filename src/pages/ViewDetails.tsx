@@ -34,9 +34,9 @@ const ViewDetails: React.FC<DetailsPageProps> = ({match}) => {
         const id = match.params.id;
         const fetchClasses = async () => {
             const { data, error } = await supabase
-            .from("learners")
+            .from("enrollment_view")
             .select()
-            .match({class_id: id})
+            .match({id: id})
     
             if (error) {
                 console.log(error)
@@ -71,7 +71,9 @@ const ViewDetails: React.FC<DetailsPageProps> = ({match}) => {
                     <IonList>
                         {students?.map((course: any) => (
                             <IonItem key={course.student_number}>
+                                <IonLabel>{course.last_name + ', ' + course.first_name}</IonLabel>
                                 <IonLabel>{course.student_number}</IonLabel>
+                                <IonLabel>{course.email}</IonLabel>
                             </IonItem>
                         ))}
                     </IonList>
