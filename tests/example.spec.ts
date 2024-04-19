@@ -21,8 +21,6 @@ test('Unsuccessful signup: unavailable UP Email', async ({ page }) => {
   await page.getByRole('button', { name: 'Next' }).nth(1).click();
   await page.getByRole('button', { name: 'Finish' }).click();
   await page.getByRole('link', { name: 'Create Account' }).click();
-  await page.getByText('Student/Professor').click();
-  await page.getByRole('button', { name: 'Student' }).click();
   await page.getByLabel('UP ID NumberUP ID Number').fill('202107015');
   await page.getByLabel('First NameFirst Name').click();
   await page.getByLabel('First NameFirst Name').fill('Antonio');
@@ -46,8 +44,6 @@ test('Successful signup', async ({ page }) => {
   await page.getByRole('button', { name: 'Next' }).nth(1).click();
   await page.getByRole('button', { name: 'Finish' }).click();
   await page.getByRole('link', { name: 'Create Account' }).click();
-  await page.getByText('Student/Professor').click();
-  await page.getByRole('button', { name: 'Student' }).click();
   await page.getByLabel('UP ID NumberUP ID Number').fill('202107015');
   await page.getByLabel('First NameFirst Name').click();
   await page.getByLabel('First NameFirst Name').fill('Antonio');
