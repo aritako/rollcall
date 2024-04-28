@@ -3,12 +3,17 @@ import supabase from "../config/supabaseClient"
 import { IonGrid, IonRow, IonCol, IonCard, IonCardContent, IonInput, IonButton, IonSelect, IonSelectOption, useIonRouter, IonAlert } from '@ionic/react';
 
 const RegisterForm: React.FC = () =>{
+    const router = useIonRouter();
     const [isTouchedEmail, setIsTouchedEmail] = useState(false);
     const [isTouchedStudentNumber, setIsTouchedStudentNumber] = useState(false);
     const [isEmailValid, setIsEmailValid] = useState<boolean>();
     const [isStudentNumberValid, setIsStudentNumberValid] = useState<boolean>();
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
+    const [alert, setAlert] = useState({
+        show: false,
+        message: ""
+    })
     const [formData, setFormData] = useState({
         user_type: "",
         student_number: "",
@@ -17,7 +22,7 @@ const RegisterForm: React.FC = () =>{
         email: "",
         password: ""
     });
-    const router = useIonRouter();
+
     const validateStudentNumberFormat = (student_number: string) => {
         return student_number.match(
             /^[0-9]{9}$/
@@ -86,11 +91,9 @@ const RegisterForm: React.FC = () =>{
             }
             )
             if (error) {
-                setAlertMessage(error.message);
-                setShowAlert(true);
+                setAlert({show: true, message: "This email is already in use."})
             } else {
-                setAlertMessage("User Registration Success!");
-                setShowAlert(true);
+                setAlert({show: true, message: "Please check your email for the verification link."})
                 // IMPORTANT NOTE: Remove this when implementing signup with email verification!
                 await supabase.auth.signOut();
                 router.push('/login');
@@ -157,10 +160,10 @@ const RegisterForm: React.FC = () =>{
             </IonRow>
         </IonGrid>
         <IonAlert
-            isOpen={showAlert}
-            onDidDismiss={() => setShowAlert(false)}
-            header={alertMessage.includes("Success") ? "Success" : "Error"}
-            message={alertMessage}
+            isOpen={alert.show}
+            onDidDismiss={() => setAlert({show: false, message: ""})}
+            header={alert.message.includes("Success") ? "Success" : "Error"}
+            message={alert.message}
             buttons={['OK']}
         />
         </>
