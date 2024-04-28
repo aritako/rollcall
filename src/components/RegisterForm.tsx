@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import supabase from "../config/supabaseClient"
-import { IonGrid, IonRow, IonCol, IonCard, IonCardContent, IonInput, IonButton, IonSelect, IonSelectOption } from '@ionic/react';
+import { IonGrid, IonRow, IonCol, IonCard, IonCardContent, IonInput, IonButton, IonSelect, IonSelectOption, useIonRouter, IonAlert } from '@ionic/react';
 
 const RegisterForm: React.FC = () =>{
     const [isTouchedEmail, setIsTouchedEmail] = useState(false);
     const [isTouchedStudentNumber, setIsTouchedStudentNumber] = useState(false);
     const [isEmailValid, setIsEmailValid] = useState<boolean>();
     const [isStudentNumberValid, setIsStudentNumberValid] = useState<boolean>();
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
     const [formData, setFormData] = useState({
         user_type: "",
         student_number: "",
@@ -15,7 +17,7 @@ const RegisterForm: React.FC = () =>{
         email: "",
         password: ""
     });
-
+    const router = useIonRouter();
     const validateStudentNumberFormat = (student_number: string) => {
         return student_number.match(
             /^[0-9]{9}$/
@@ -83,15 +85,21 @@ const RegisterForm: React.FC = () =>{
                 }
             }
             )
-            if (error){
-            alert(error.message)
-            } else{
-            alert("User Registration Success!")
+            if (error) {
+                setAlertMessage(error.message);
+                setShowAlert(true);
+            } else {
+                setAlertMessage("User Registration Success!");
+                setShowAlert(true);
+                // IMPORTANT NOTE: Remove this when implementing signup with email verification!
+                await supabase.auth.signOut();
+                router.push('/login');
         }
 
     }
     // console.log(formData)
     return(
+        <>
         <IonGrid fixed>
             <IonRow class = "ion-justify-content-center">
                 <IonCol size = '12' sizeMd = '8' sizeLg = '6' sizeXl = "4">
@@ -148,6 +156,14 @@ const RegisterForm: React.FC = () =>{
                 </IonCol>
             </IonRow>
         </IonGrid>
+        <IonAlert
+            isOpen={showAlert}
+            onDidDismiss={() => setShowAlert(false)}
+            header={alertMessage.includes("Success") ? "Success" : "Error"}
+            message={alertMessage}
+            buttons={['OK']}
+        />
+        </>
     )
 }
 
