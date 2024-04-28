@@ -18,11 +18,9 @@ const Home: React.FC = () => {
     { name: 'Settings', url: '/app/settings', icon: newspaperOutline },
   ]
   const signOut = async () => {
-    // sessionStorage.removeItem('token');
     await supabase.auth.signOut();
-    router.push('/', 'forward', 'replace');
+    router.push('/login', 'forward', 'replace');
   }
-  
   return (
     <IonPage>
       <IonSplitPane contentId = 'main' when = "xl">
