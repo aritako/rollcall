@@ -11,6 +11,7 @@ import UserImage from '../assets/user.png'
 import { compassSharp, settingsOutline } from 'ionicons/icons';
 import supabase from '../config/supabaseClient';
 import { Session, UserMetadata } from '@supabase/supabase-js';
+import AddClass from '../components/AddClass';
 
 type Class = {
     id: number;
@@ -34,6 +35,8 @@ const View: React.FC = () => {
         show: false,
         message: ""
     })
+    const [openModal, setOpenModal] = useState(false)
+
     const fetchClasses = async () => {
         const { data: { user } } = await supabase.auth.getUser()
 
@@ -179,6 +182,10 @@ const View: React.FC = () => {
                         <IonIcon icon = {settingsOutline} className = "settings-button-ion-icon"></IonIcon>
                     </IonButton>
                 </div>
+                <IonButton expand="block" onClick={() => setOpenModal(true)}>
+                    Add Class
+                </IonButton>
+                <AddClass openModal = {openModal} closeModal={() => setOpenModal(false)}/>
                 {metadata?.user_type === "student" && (
                 <IonCard className = "card-class round-border">
                     <div className = "flex align-center ion-margin-vertical">
