@@ -1,6 +1,7 @@
 import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonMenuButton, IonPage, IonTitle, IonToolbar, IonRefresher,
     IonRefresherContent, RefresherEventDetail,
-    IonText,} from '@ionic/react';
+    IonText,
+    IonAlert,} from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import ClassCard from '../components/ClassCard';
 import Dashboard from './Dashboard';
@@ -29,7 +30,10 @@ const View: React.FC = () => {
     const [formData, setFormData] = useState({
         class_id: ""
     });
-
+    const [alertData, setAlertData] = useState({
+        show: false,
+        message: ""
+    })
     const fetchClasses = async () => {
         const { data: { user } } = await supabase.auth.getUser()
 
@@ -137,14 +141,15 @@ const View: React.FC = () => {
             fetchClasses()
 
             if (error){
-            alert(error.message)
+                setAlertData({show: true, message: "You're already in this class!"})
             } else{
-            alert("Succesfully added class!")
+                setAlertData({show: true, message: "Successfully added class!"})
         }
 
     }
     // console.log(metadata)
     return (
+        <>
         <IonPage>
             <IonHeader>
                 <IonToolbar>
@@ -207,6 +212,14 @@ const View: React.FC = () => {
                 
             </IonContent>
         </IonPage>
+        <IonAlert
+            isOpen={alertData.show}
+            onDidDismiss={() => setAlertData({show: false, message: ""})}
+            header={alertData.message.includes("Success") ? "Success" : "Error"}
+            message={alertData.message}
+            buttons={['OK']}
+        />
+        </>
     );
 };
 
