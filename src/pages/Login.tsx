@@ -16,16 +16,16 @@ const Login: React.FC = () => {
         email: "",
         password: ""
     });
-    const [session, setSession] = useState<Session | null>(null)
+    // const [session, setSession] = useState<Session | null>(null)
 
-    useEffect(() => {
-        const fetchSession = async () => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session)
-        })
-        };
-        fetchSession();
-    }, []);
+    // useEffect(() => {
+    //     const fetchSession = async () => {
+    //     supabase.auth.getSession().then(({ data: { session } }) => {
+    //         setSession(session)
+    //     })
+    //     };
+    //     fetchSession();
+    // }, []);
     
     // Check for preferences
     useEffect(() => {
@@ -47,7 +47,7 @@ const Login: React.FC = () => {
 
     const doLogin = async (event: any) =>{
         event.preventDefault();
-        console.log("EMAIL PASSED: ", formData.email, "PASSWORD PASSED: " ,formData.password);
+        // console.log("EMAIL PASSED: ", formData.email, "PASSWORD PASSED: " ,formData.password);
         const { data, error } = await supabase.auth.signInWithPassword({
             email: formData.email,
             password: formData.password,
@@ -103,7 +103,8 @@ const Login: React.FC = () => {
                                         labelPlacement="floating" 
                                         fill = "outline" 
                                         placeholder = "UP Email"
-                                        onIonChange = {handleChange} 
+                                        onIonInput = {handleChange} 
+                                        value = {formData.email}
                                         />
                                     <IonInput required 
                                         name = "password" 
@@ -114,7 +115,7 @@ const Login: React.FC = () => {
                                         placeholder = "Password" 
                                         className = "ion-margin-top"
                                         onIonInput = {handleChange} 
-                                        
+                                        value = {formData.password}
                                         />
                                     <IonButton type = 'submit' expand = "block" className = "ion-margin-top">
                                         Login
