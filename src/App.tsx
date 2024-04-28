@@ -32,7 +32,6 @@ setupIonicReact();
 const App: React.FC = () => {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true);
-  const history = useHistory();
   
   useEffect(() => {
     const fetchSession = async () => {
@@ -54,8 +53,9 @@ const App: React.FC = () => {
 
     return () => subscription.unsubscribe();
   }, []);
-  console.log("CURRENT SESSION:", session)
+  // console.log("CURRENT SESSION:", session)
   if (loading) {
+    console.log("Loading...")
     return null; // Render nothing while loading
   }
   return (
@@ -67,7 +67,7 @@ const App: React.FC = () => {
           <Route path="/app">
             {session ? <Home /> : <Redirect to="/login" />}
           </Route>
-          <Redirect exact from="/" to={session ? "/app" : "/login"} />
+          <Route exact path="/" render={() => <Redirect to={'/login'} />}  />
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>
