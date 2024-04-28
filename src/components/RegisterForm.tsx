@@ -8,9 +8,7 @@ const RegisterForm: React.FC = () =>{
     const [isTouchedStudentNumber, setIsTouchedStudentNumber] = useState(false);
     const [isEmailValid, setIsEmailValid] = useState<boolean>();
     const [isStudentNumberValid, setIsStudentNumberValid] = useState<boolean>();
-    const [showAlert, setShowAlert] = useState(false);
-    const [alertMessage, setAlertMessage] = useState('');
-    const [alert, setAlert] = useState({
+    const [alertData, setAlertData] = useState({
         show: false,
         message: ""
     })
@@ -91,9 +89,9 @@ const RegisterForm: React.FC = () =>{
             }
             )
             if (error) {
-                setAlert({show: true, message: "This email is already in use."})
+                setAlertData({show: true, message: "This email is already in use."})
             } else {
-                setAlert({show: true, message: "Please check your email for the verification link."})
+                setAlertData({show: true, message: "Please check your email for the verification link."})
                 // IMPORTANT NOTE: Remove this when implementing signup with email verification!
                 await supabase.auth.signOut();
                 router.push('/login');
@@ -160,10 +158,10 @@ const RegisterForm: React.FC = () =>{
             </IonRow>
         </IonGrid>
         <IonAlert
-            isOpen={alert.show}
-            onDidDismiss={() => setAlert({show: false, message: ""})}
-            header={alert.message.includes("Success") ? "Success" : "Error"}
-            message={alert.message}
+            isOpen={alertData.show}
+            onDidDismiss={() => setAlertData({show: false, message: ""})}
+            header={alertData.message.includes("Success") ? "Success" : "Error"}
+            message={alertData.message}
             buttons={['OK']}
         />
         </>

@@ -1,4 +1,4 @@
-import { IonContent, IonFooter, IonHeader, IonPage, IonTitle, IonToolbar, IonCard, IonCardContent, IonInput, IonButton, IonIcon, useIonRouter, useIonLoading, IonCol, IonGrid, IonRow } from '@ionic/react';
+import { IonContent, IonFooter, IonHeader, IonPage, IonTitle, IonToolbar, IonCard, IonCardContent, IonInput, IonButton, IonIcon, useIonRouter, useIonLoading, IonCol, IonGrid, IonRow, IonAlert } from '@ionic/react';
 import {logInOutline} from 'ionicons/icons';
 import React, {useEffect, useState} from 'react';
 import Intro from '../components/Intro';
@@ -16,16 +16,10 @@ const Login: React.FC = () => {
         email: "",
         password: ""
     });
-    // const [session, setSession] = useState<Session | null>(null)
-
-    // useEffect(() => {
-    //     const fetchSession = async () => {
-    //     supabase.auth.getSession().then(({ data: { session } }) => {
-    //         setSession(session)
-    //     })
-    //     };
-    //     fetchSession();
-    // }, []);
+    const [alertData, setAlertData] = useState({
+        show: false,
+        message: ""
+    })
     
     // Check for preferences
     useEffect(() => {
@@ -52,7 +46,9 @@ const Login: React.FC = () => {
             email: formData.email,
             password: formData.password,
         })
-        if (error) alert("Invalid Login!");
+        if (error){
+            setAlertData({show: true, message: "Invalid email or password."});
+        }
         else{
             router.push('/app', 'forward', 'replace'); 
         }
@@ -74,6 +70,7 @@ const Login: React.FC = () => {
                 <Intro onFinish = {finishIntro} />
             ) : (
                 introSeen === true && (
+    <>
     <IonPage>
         <IonHeader>
             <IonToolbar color = {'primary'}>
@@ -137,6 +134,14 @@ const Login: React.FC = () => {
         </IonContent>
 
     </IonPage>
+    <IonAlert
+            isOpen={alertData.show}
+            onDidDismiss={() => setAlertData({show: false, message: ""})}
+            header={alertData.message.includes("Success") ? "Success" : "Error"}
+            message={alertData.message}
+            buttons={['OK']}
+        />
+    </>
                 )
             )}
         </>
