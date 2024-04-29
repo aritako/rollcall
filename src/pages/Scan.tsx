@@ -1,5 +1,6 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React from 'react';
+import QRCodeGen from '../components/QRCodeGen';
 
 const Tab2: React.FC = () => {
 
@@ -14,7 +15,7 @@ const Tab2: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding">
-                Insert Scan QR UI Here...
+                <QRCodeGen />
             </IonContent>
         </IonPage>
     );
