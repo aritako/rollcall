@@ -1,17 +1,14 @@
-import { IonContent, IonFooter, IonHeader, IonPage, IonTitle, IonToolbar, IonCard, IonCardContent, IonInput, IonButton, IonIcon, useIonRouter, useIonLoading, IonCol, IonGrid, IonRow } from '@ionic/react';
+import { IonContent, IonFooter, IonHeader, IonPage, IonTitle, IonToolbar, IonCard, IonCardContent, IonInput, IonButton, IonIcon, useIonRouter, useIonLoading, IonCol, IonGrid, IonRow, IonAlert } from '@ionic/react';
 import {logInOutline} from 'ionicons/icons';
 import React, {useEffect, useState} from 'react';
 import Intro from '../components/Intro';
 import { Preferences } from '@capacitor/preferences';
 import logoSample from '../assets/sample/logo-sample.png';
 import supabase from '../config/supabaseClient';
+import { Session } from '@supabase/supabase-js';
 const INTRO_KEY = 'intro-seen';
 
-interface LoginProps {
-    setToken: (token: any) => void;
-}
-
-const Login: React.FC<LoginProps> = ({setToken}) => {
+const Login: React.FC = () => {
     const [introSeen, setIntroSeen] = useState(true);
     const router = useIonRouter();
     const [present, dismiss] = useIonLoading();
@@ -19,9 +16,11 @@ const Login: React.FC<LoginProps> = ({setToken}) => {
         email: "",
         password: ""
     });
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    console.log(formData)
+    const [alertData, setAlertData] = useState({
+        show: false,
+        message: ""
+    })
+    
     // Check for preferences
     useEffect(() => {
         const checkStorage = async () => {
@@ -40,29 +39,19 @@ const Login: React.FC<LoginProps> = ({setToken}) => {
         })
     }
 
-   
-    
     const doLogin = async (event: any) =>{
         event.preventDefault();
-        console.log("EMAIL PASSED: ", formData.email, "PASSWORD PASSED: " ,formData.password);
+        // console.log("EMAIL PASSED: ", formData.email, "PASSWORD PASSED: " ,formData.password);
         const { data, error } = await supabase.auth.signInWithPassword({
             email: formData.email,
             password: formData.password,
         })
-        if (error) alert("Invalid Login!");
-        else{
-            setToken(data)
-            router.push('/app', 'root') 
+        if (error){
+            setAlertData({show: true, message: "Invalid email or password."});
         }
-
-        // await present('Logging in...');
-        // setTimeout(() => {
-        //     dismiss();
-        //     router.push('/app','forward')
-        // }, 1000);
-        // // INSERT LOGIN LOGIC HERE
-        // console.log('doLogin');
-        // //router.push('/home', 'root') 
+        else{
+            router.push('/app', 'forward', 'replace'); 
+        }
     }
 
     const finishIntro = async () => {
@@ -81,6 +70,7 @@ const Login: React.FC<LoginProps> = ({setToken}) => {
                 <Intro onFinish = {finishIntro} />
             ) : (
                 introSeen === true && (
+    <>
     <IonPage>
         <IonHeader>
             <IonToolbar color = {'primary'}>
@@ -110,7 +100,8 @@ const Login: React.FC<LoginProps> = ({setToken}) => {
                                         labelPlacement="floating" 
                                         fill = "outline" 
                                         placeholder = "UP Email"
-                                        onIonChange = {handleChange} 
+                                        onIonInput = {handleChange} 
+                                        value = {formData.email}
                                         />
                                     <IonInput required 
                                         name = "password" 
@@ -121,7 +112,7 @@ const Login: React.FC<LoginProps> = ({setToken}) => {
                                         placeholder = "Password" 
                                         className = "ion-margin-top"
                                         onIonInput = {handleChange} 
-                                        
+                                        value = {formData.password}
                                         />
                                     <IonButton type = 'submit' expand = "block" className = "ion-margin-top">
                                         Login
@@ -143,6 +134,14 @@ const Login: React.FC<LoginProps> = ({setToken}) => {
         </IonContent>
 
     </IonPage>
+    <IonAlert
+            isOpen={alertData.show}
+            onDidDismiss={() => setAlertData({show: false, message: ""})}
+            header={alertData.message.includes("Success") ? "Success" : "Error"}
+            message={alertData.message}
+            buttons={['OK']}
+        />
+    </>
                 )
             )}
         </>

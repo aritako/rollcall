@@ -6,22 +6,21 @@ import Settings from './Settings';
 import { homeOutline, logOutOutline, newspaperOutline } from 'ionicons/icons';
 import './Home.css';
 import supabase from '../config/supabaseClient';
-interface Token {
-  token: any;
-}
+import { useState, useEffect } from 'react';
+import { Session } from '@supabase/supabase-js';
+import ViewDetails from './ViewDetails';
 
-const Home: React.FC<Token> = ({token}) => {
+const Home: React.FC = () => {
   const router = useIonRouter();
+  const [session, setSession] = useState<Session | null>(null)
   const paths = [
     { name: 'Home', url: '/app/dashboard/view', icon: homeOutline },
     { name: 'Settings', url: '/app/settings', icon: newspaperOutline },
   ]
   const signOut = async () => {
-    sessionStorage.removeItem('token');
     await supabase.auth.signOut();
-    router.push('/', 'forward', 'replace');
+    router.push('/login', 'forward', 'replace');
   }
-  console.log('Home');
   return (
     <IonPage>
       <IonSplitPane contentId = 'main' when = "xl">
@@ -51,10 +50,8 @@ const Home: React.FC<Token> = ({token}) => {
       <IonRouterOutlet id = 'main'>
           <Route path = "/app/dashboard" component = {Dashboard} />
           <Route path = "/app/settings" component = {Settings} />
-          {/* <Route path = "/app/dashboard/scan" component = {Dashboard} />
+          <Route path = "/app/dashboard/scan" component = {Dashboard} />
           <Route path = "/app/dashboard/profile" component = {Dashboard} />
-          <Route path = "/app/settings/tab1" component = {Settings} />
-          <Route path = "/app/settings/tab2" component = {Settings} /> */}
           <Route exact path = "/app">
               <Redirect to = "/app/dashboard/view"/>
           </Route>

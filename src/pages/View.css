@@ -1,0 +1,22 @@
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.parent-user-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-greeting {
+  display:flex;
+  flex-direction: column;
+  align-content: space-between;
+  padding-left: 25px;
+}
+
+div.user-greeting > ion-title{
+    padding: 0;
+}

@@ -1,21 +1,25 @@
 import React, {useEffect, useState} from 'react';
 import supabase from "../config/supabaseClient"
-import { IonGrid, IonRow, IonCol, IonCard, IonCardContent, IonInput, IonButton } from '@ionic/react';
+import { IonGrid, IonRow, IonCol, IonCard, IonCardContent, IonInput, IonButton, IonSelect, IonSelectOption, useIonRouter, IonAlert } from '@ionic/react';
 
 const RegisterForm: React.FC = () =>{
+    const router = useIonRouter();
     const [isTouchedEmail, setIsTouchedEmail] = useState(false);
     const [isTouchedStudentNumber, setIsTouchedStudentNumber] = useState(false);
     const [isEmailValid, setIsEmailValid] = useState<boolean>();
     const [isStudentNumberValid, setIsStudentNumberValid] = useState<boolean>();
+    const [alertData, setAlertData] = useState({
+        show: false,
+        message: ""
+    })
     const [formData, setFormData] = useState({
+        user_type: "",
         student_number: "",
         first_name: "",
         last_name: "",
         email: "",
         password: ""
     });
-
-    console.log(formData)
 
     const validateStudentNumberFormat = (student_number: string) => {
         return student_number.match(
@@ -63,7 +67,10 @@ const RegisterForm: React.FC = () =>{
             }
         })
     }
-
+    const customActionSheetOptions = {
+        header: 'User Type',
+        subHeader: 'Please select whether you are a student or a professor.',
+    };
     async function doSignUp(event: any){
         event.preventDefault();
         const { data, error } = await supabase.auth.signUp(
@@ -72,6 +79,7 @@ const RegisterForm: React.FC = () =>{
                 password: formData.password,
                 options: {
                 data: {
+                    user_type: formData.user_type,
                     student_number: formData.student_number,
                     first_name: formData.first_name,
                     last_name: formData.last_name,
@@ -80,24 +88,42 @@ const RegisterForm: React.FC = () =>{
                 }
             }
             )
-            if (error){
-            alert(error.message)
-            } else{
-            alert("User Registration Success!")
+            if (error) {
+                setAlertData({show: true, message: "This email is already in use."})
+            } else {
+                setAlertData({show: true, message: "Please check your email for the verification link."})
+                // IMPORTANT NOTE: Remove this when implementing signup with email verification!
+                await supabase.auth.signOut();
+                router.push('/login');
         }
 
     }
+    // console.log(formData)
     return(
+        <>
         <IonGrid fixed>
             <IonRow class = "ion-justify-content-center">
                 <IonCol size = '12' sizeMd = '8' sizeLg = '6' sizeXl = "4">
                     <IonCard>
                         <IonCardContent>
                             <form onSubmit = {doSignUp}>
+                                <IonSelect
+                                    name = "user_type"
+                                    label="User Type"
+                                    interfaceOptions={customActionSheetOptions}
+                                    interface="action-sheet"
+                                    placeholder="Student/Professor"
+                                    labelPlacement="floating" 
+                                    fill = "outline"
+                                    onIonChange={handleChange} 
+                                    >
+                                    <IonSelectOption value="student">Student</IonSelectOption>
+                                    <IonSelectOption value="professor">Professor</IonSelectOption>
+                                </IonSelect>
                                 <IonInput 
                                     required name = "student_number" 
                                     type = "text" 
-                                    label = "Student Number" 
+                                    label = "UP ID Number" 
                                     labelPlacement="floating" 
                                     fill = "outline" 
                                     placeholder = "Student Number" 
@@ -131,6 +157,14 @@ const RegisterForm: React.FC = () =>{
                 </IonCol>
             </IonRow>
         </IonGrid>
+        <IonAlert
+            isOpen={alertData.show}
+            onDidDismiss={() => setAlertData({show: false, message: ""})}
+            header={alertData.message.includes("Success") ? "Success" : "Error"}
+            message={alertData.message}
+            buttons={['OK']}
+        />
+        </>
     )
 }
 
