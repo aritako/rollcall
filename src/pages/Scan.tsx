@@ -1,59 +1,104 @@
-import { IonButton, IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar} from '@ionic/react';
+import { IonButton, IonButtons, IonGrid, IonRow, IonCol, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar} from '@ionic/react';
 import { PluginListenerHandle } from '@capacitor/core';
-import { Barcode, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
-import React from 'react';
+import { BarcodeFormat, BarcodeScanner, LensFacing, StartScanOptions } from '@capacitor-mlkit/barcode-scanning';
+import React, { useEffect, useState } from 'react';
+import { error } from 'console';
+import { returnUpBackOutline } from 'ionicons/icons';
+import './scan.css';
 
-
-const Tab2: React.FC = () => {
-    
-    // note currently working properly yet, will go back to this at a later sprint
-    async function installGoogleBarcodeScanner() : Promise<void> {
-        await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable().then((x) => {
-            if (x.available === false) {
-                BarcodeScanner.installGoogleBarcodeScannerModule().then(() => {
-                    const listnr = BarcodeScanner.addListener('googleBarcodeScannerModuleInstallProgress', (event) => {
-                        console.log("LISTEN: " + event.progress + " " + event.state); 
-                        if (event.state !== 4) 
-                            installGoogleBarcodeScanner();
-                    });
-                });
-            }  
-            else console.log("AVAILABLE");
-        })
-    }
-
-    async function scan() : Promise<void> {
-        console.log("SCANNING");       
-        installGoogleBarcodeScanner();
-
-        const granted = await BarcodeScanner.requestPermissions();
-        if (!granted) {
-          console.log("PERMISSION NOT GRANTED");
-          return;
+const checkPermission = async () => {
+    const status = await BarcodeScanner.checkPermissions();
+    if (status.camera === 'denied') {
+        const requestResult = await BarcodeScanner.requestPermissions()
+        if (requestResult.camera === 'granted' || requestResult.camera === 'limited') { // limited keyword is for iOS
+            return true;
         }
-        const scanResult = await BarcodeScanner.scan();
-        console.log("SCAN RESULT " + scanResult);
+    }
+    else return true;
+    return false;
+}
+
+const checkGoogleBarcodeScannerModule = async () => {
+    const status = await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable()
+    if (status.available === false) {
+        await BarcodeScanner.installGoogleBarcodeScannerModule();
+        const listener = await BarcodeScanner.addListener('googleBarcodeScannerModuleInstallProgress', (event) => {
+            console.log('Install progress:', event.progress, event.state);
+            if (event.state === 4) { // for Completed
+                console.log('Install progress: COMPLETED');
+                listener.remove();
+            }
+            else if (event.state === 3 || event.state === 5) {
+                console.log("Install progress: CANCELED or FAILED");
+                listener.remove();
+            }
+        })
+        return;
+    }
+    console.log("Google Barcode Scanner Module is already installed.");
+}
+
+const Tab2 = () => {
+    const [result, setResult] = useState('');
+    
+    useEffect(() => {
+        const listener = BarcodeScanner.addListener('barcodeScanned', (event) => {
+            setResult(event.barcode.displayValue);
+            stopScan();
+        });
+        return () => { listener.remove(); };
+    }, []);
+
+    const stopScan = async () => {
+        await BarcodeScanner.stopScan();
+        document.querySelectorAll('.hide-on-scanner-active')?.forEach(
+            (elem) => elem.classList.remove('qr-scanner-active'))
     }
 
-    
-    return (
-        <IonPage>
-            <IonHeader>
-                <IonToolbar>
-                    <IonButtons slot = "start">
-                        <IonMenuButton/>
-                    </IonButtons>
-                    <IonTitle>Scan QR Code</IonTitle>
-                </IonToolbar>
-            </IonHeader>
-            <IonContent className="ion-padding">
-                Insert Scan QR UI Here...
-            </IonContent>
-            <IonButton onClick={scan}>
-                Use Scanner
+    const startScan = async () => {
+        const support = await BarcodeScanner.isSupported();
+        const perms = await checkPermission();
+        //await checkGoogleBarcodeScannerModule();
+        //if (!support || !perms) return;
+
+        try {
+            const options : StartScanOptions = {
+                formats: [BarcodeFormat.QrCode], 
+                lensFacing: LensFacing.Back
+            }
+            await BarcodeScanner.startScan(options);
+            document.querySelectorAll('.hide-on-scanner-active')?.forEach(
+                (elem) => elem.classList.add('qr-scanner-active')) 
+        } 
+        catch (e) {
+            console.error('Closing camera due to error:', e);
+            stopScan();
+        }
+ };
+
+ return (
+    <IonPage>
+        <IonHeader>
+            <IonToolbar>
+                <IonButtons slot = "start">
+                    <IonMenuButton/>
+                </IonButtons>
+                <IonTitle>Scan QR Code</IonTitle>
+            </IonToolbar>
+        </IonHeader>
+        <IonContent className="ion-padding hide-on-scanner-active">
+            Last scanned: {result}
+        </IonContent>
+        <IonGrid className="bottom">
+            <IonButton onClick={startScan}>
+                Start QR Code
             </IonButton>
-        </IonPage>
-    );
+            <IonButton onClick={stopScan}>
+                Stop QR Code
+            </IonButton>
+        </IonGrid>
+    </IonPage>
+);
 };
 
 export default Tab2;
