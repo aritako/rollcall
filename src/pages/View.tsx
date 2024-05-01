@@ -20,6 +20,7 @@ type Class = {
     time_start: string;
     time_end: string;
     professor: string;
+    toggle: boolean;
 };
 
 const View: React.FC = () => {
@@ -214,6 +215,7 @@ const View: React.FC = () => {
                     <ClassCard
                         key={item.id}
                         {...item}
+                        toggle={true}
                     />
                 ))}
                 

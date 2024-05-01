@@ -43,7 +43,9 @@ const MarkAttendance: React.FC = () => {
             <IonContent className="ion-padding center">
                 <div className = "div-mark-attendance">
                     <div className = "mark-title">You are confirming your attendance for</div>
+                    <div className = "mark-card">
                     <ClassCard {...classData}/>
+                    </div>
                     <IonCheckbox value = {isChecked} labelPlacement="end" onIonChange = {handleCheckboxChange}>
                         <IonText color = "medium" className = "ion-text-wrap mark-confirm">
                         I am truthfully confirming my attendance. Any suspected misconduct is an academic dishonesty and will be subject to disciplinary sanction.

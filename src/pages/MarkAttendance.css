@@ -17,6 +17,10 @@
     margin-bottom: 20px;
 }
 
+.mark-card{
+    width:100%
+}
+
 .mark-confirm{
     font-size: 12px;
 }
