@@ -31,4 +31,30 @@ npx playwright test
 ## Simulation on Android Device
 Before proceeding, please ensure that **Java 17** and **Android Studio** are installed in your machine.
 
-To be updated.
+Make sure you have performed the steps above.
+
+In the terminal, navigate to the **rollcall** folder.
+Execute
+```
+ionic cap sync
+ionic cap open
+```
+
+The latter will open Android Studio with this project. 
+Wait for the loading bars on the lower right to finish, then you can press the 
+```
+Run 'app'
+``` 
+button in the upper middle part of the Android Studio window.
+
+This should instantialize (or create) your android emulator.
+Additionally, you can plug your own physical android device (make sure **Developer Options** and **USB Debugging** are ON)
+
+IMPORTANT:
+Every change in code, rerun
+```
+ionic cap sync
+```
+And then wait for the Android Studio loading bars again.
+No need to close or reopen Android Studio.
+
