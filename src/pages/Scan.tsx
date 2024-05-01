@@ -4,8 +4,9 @@ import { BarcodeFormat, BarcodeScanner, LensFacing, StartScanOptions } from '@ca
 import React, { useEffect, useState } from 'react';
 import { error } from 'console';
 import { returnUpBackOutline } from 'ionicons/icons';
-import './scan.css';
+import './Scan.css';
 import QRCodeGen from '../components/QRCodeGen';
+import { User, UserMetadata } from '@supabase/supabase-js';
     
 const checkPermission = async () => {
     const status = await BarcodeScanner.checkPermissions();
@@ -39,9 +40,13 @@ const checkGoogleBarcodeScannerModule = async () => {
     console.log("Google Barcode Scanner Module is already installed.");
 }
 
-const Tab2 = () => {
+interface ViewProps {
+    user: User | null;
+}
+
+const Tab2: React.FC<ViewProps> = ({user}) => {
     const [result, setResult] = useState('');
-    
+    const [metadata, setMetadata] = useState<UserMetadata | null>(null);
     useEffect(() => {
         const listener = BarcodeScanner.addListener('barcodeScanned', (event) => {
             setResult(event.barcode.displayValue);
@@ -49,6 +54,10 @@ const Tab2 = () => {
         });
         return () => { listener.remove(); };
     }, []);
+
+    useEffect(() => {
+        if (user) setMetadata(user.user_metadata);
+    }, [user]);
 
     const stopScan = async () => {
         await BarcodeScanner.stopScan();
@@ -88,9 +97,12 @@ const Tab2 = () => {
             </IonToolbar>
         </IonHeader>
         <IonContent className="ion-padding hide-on-scanner-active">
-            <QRCodeGen />
-            Last scanned: {result}
+            {metadata?.user_type === "professor"&& 
+                <QRCodeGen />
+            }
+            {metadata?.user_type === "student" && `Last scanned: ${result}`}
         </IonContent>
+        {metadata?.user_type === "student" && 
         <IonGrid className="bottom">
             <IonButton onClick={startScan}>
                 Start QR Code
@@ -99,6 +111,7 @@ const Tab2 = () => {
                 Stop QR Code
             </IonButton>
         </IonGrid>
+        }
     </IonPage>
 );
 };

@@ -35,7 +35,7 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
           <Route exact path="/app/dashboard/view" render={(props) => <View {...props} user={user} />} />
           <Route exact path='/app/dashboard/view/:id' component={ViewDetails} />
           <Route exact path='/app/dashboard/attendance/:id' component={MarkAttendance} />
-          <Route path="/app/dashboard/scan" component={Scan} />
+          <Route path="/app/dashboard/scan" render={(props) => <Scan {...props} user={user} />} />
           <Route path="/app/dashboard/profile" component={Profile} />
           <Route exact path="/app/dashboard">
             <Redirect to="/app/dashboard/view" />
