@@ -30,8 +30,8 @@ const MarkAttendance: React.FC = () => {
         setIsChecked(checked)
     }
     const submitAttendance = () => {
-        console.log("Attendance confirmed")
-        router.push("/app/dashboard/view")
+        console.log("Attendance confirmed");
+        router.push("/app/dashboard/view", 'forward', 'replace');
     }
     return (
         <IonPage>

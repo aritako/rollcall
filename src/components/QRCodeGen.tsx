@@ -59,8 +59,7 @@ const QRCodeGen: React.FC = () => {
   const generateQRCode = async () => {
 
     try {
-      // Replace 'localhost:3000' with your actual localhost address and port
-      const url = `http://localhost:8100/app/dashboard/attendance/${selectedItem}`;
+      const url = `/app/dashboard/attendance/${selectedItem}`;
       const dataURL = await QRCode.toDataURL(url);
       setQrCodeDataURL(dataURL);
     } catch (err) {
@@ -72,8 +71,6 @@ const QRCodeGen: React.FC = () => {
     setSelectedItem(e.detail.value);
     console.log(`ionChange fired with value: ${e.detail.value}`)
   };
-
-
 
   return (
     <div>
