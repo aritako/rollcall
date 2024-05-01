@@ -10,7 +10,7 @@ import './View.css';
 import UserImage from '../assets/user.png'
 import { compassSharp, settingsOutline } from 'ionicons/icons';
 import supabase from '../config/supabaseClient';
-import { Session, UserMetadata } from '@supabase/supabase-js';
+import { Session, User, UserMetadata } from '@supabase/supabase-js';
 import AddClass from '../components/AddClass';
 
 type Class = {
@@ -21,11 +21,13 @@ type Class = {
     time_end: string;
     professor: string;
 };
-
-const View: React.FC = () => {
+interface ViewProps {
+    user: User | null;
+}
+const View: React.FC<ViewProps> = (props) => {
+    const { user } = props
     const [fetchError, setFetchError] : Array<any> = useState(null)
     const [courses, setCourses] : Array<any> = useState(null)
-    const [session, setSession] = useState<Session | null>(null)
     const [metadata, setMetadata] = useState<UserMetadata | null | undefined>(null)
     const [isClassIdValid, setIsClassIdValid] = useState<boolean>();
     const [formData, setFormData] = useState({
@@ -35,11 +37,9 @@ const View: React.FC = () => {
         show: false,
         message: ""
     })
-    const [openModal, setOpenModal] = useState(false)
     const modal = useRef<HTMLIonModalElement>(null);
     const fetchClasses = async () => {
-        const { data: { user } } = await supabase.auth.getUser()
-
+        // const { data: { user } } = await supabase.auth.getUser()
         let viewName = 'enrollment_view';
         let idColumnName = 'student_number';
         if (user?.user_metadata?.user_type == 'professor') {  
@@ -95,8 +95,8 @@ const View: React.FC = () => {
       };
     async function addClass(event: any){
         event.preventDefault();
-        const { data: { user } } = await supabase.auth.getUser()
-        const { data, error } = await supabase
+        // const { data: { user } } = await supabase.auth.getUser()
+        const { error } = await supabase
             .from('learners')
             .insert({student_number: user?.user_metadata.student_number, class_id: formData.class_id})
             console.log(user?.user_metadata.student_number)
@@ -111,15 +111,11 @@ const View: React.FC = () => {
 
     }
     useEffect(() => {
-        const fetchSession = async () => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session)
-            setMetadata(session?.user?.user_metadata)
-        })
-        };
-        fetchSession();
-        fetchClasses();
-    }, []);
+        if (user){
+            setMetadata(user?.user_metadata)
+            fetchClasses();
+        }
+    }, [user]);
     
     return (
         <>
