@@ -5,7 +5,8 @@ import React, { useEffect, useState } from 'react';
 import { error } from 'console';
 import { returnUpBackOutline } from 'ionicons/icons';
 import './scan.css';
-
+import QRCodeGen from '../components/QRCodeGen';
+    
 const checkPermission = async () => {
     const status = await BarcodeScanner.checkPermissions();
     if (status.camera === 'denied') {
@@ -87,6 +88,7 @@ const Tab2 = () => {
             </IonToolbar>
         </IonHeader>
         <IonContent className="ion-padding hide-on-scanner-active">
+            <QRCodeGen />
             Last scanned: {result}
         </IonContent>
         <IonGrid className="bottom">
