@@ -21,6 +21,7 @@ type Class = {
     time_start: string;
     time_end: string;
     professor: string;
+    toggle: boolean;
 };
 interface ViewProps {
     user: User | null;
@@ -170,6 +171,7 @@ const View: React.FC<ViewProps> = (props) => {
                     <ClassCard
                         key={item.id}
                         {...item}
+                        toggle={true}
                     />
                 ))}
                 

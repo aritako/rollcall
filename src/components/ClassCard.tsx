@@ -18,11 +18,12 @@ interface ClassCardProps {
     time_start?: string;
     time_end?: string;
     professor?: string;
+    toggle?: boolean;
 }
 
 const ClassCard: React.FC<ClassCardProps> = (props) : JSX.Element => {
     return (
-        <IonCard className = "main-card card-class round-border" routerLink={`/app/dashboard/view/${props.id}`}>
+        <IonCard className = "main-card card-class round-border" routerLink={props.toggle ? `/app/dashboard/view/${props.id}`: undefined}>
             <div className = "card-class-info">
                 <img src = "https://picsum.photos/50" className = "round-border card-class-icon"/>
                 <IonCardHeader>

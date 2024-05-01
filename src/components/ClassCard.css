@@ -1,6 +1,6 @@
 .card-class ion-card-title,ion-card-subtitle {
     margin: 0;
-    padding: 2px 0px;
+    padding: 0px 0px;
 }
 
 .card-class-icon{
@@ -33,6 +33,10 @@
 .card-class-highlight{
     background-color: black;
 }
+
+/* .main-card{
+    width: 100%;
+} */
 
 ion-card.main-card:hover{
     cursor: pointer;

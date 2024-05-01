@@ -2,6 +2,7 @@ import { IonBackButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, Io
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import supabase from '../config/supabaseClient';
+import AttendanceReport from './AttendanceReport';
 interface DetailsPageProps extends RouteComponentProps<{
     id: string;
 }> {}
@@ -80,7 +81,7 @@ const ViewDetails: React.FC<DetailsPageProps> = ({match}) => {
                 </IonContent>
                 :
                 <IonContent className="ion-padding">
-                    <h1 className="font-heavy">Attendance</h1>
+                    <AttendanceReport />
                 </IonContent>
             }
         </IonPage>
