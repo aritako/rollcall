@@ -1,7 +1,8 @@
 import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonMenuButton, IonPage, IonTitle, IonToolbar, IonRefresher,
     IonRefresherContent, RefresherEventDetail,
     IonText,
-    IonAlert,} from '@ionic/react';
+    IonAlert,
+    useIonModal,} from '@ionic/react';
 import React, { useEffect, useRef, useState } from 'react';
 import ClassCard from '../components/ClassCard';
 import Dashboard from './Dashboard';
@@ -37,7 +38,7 @@ const View: React.FC<ViewProps> = (props) => {
         show: false,
         message: ""
     })
-    const modal = useRef<HTMLIonModalElement>(null);
+    // const modal = useRef<HTMLIonModalElement>(null);
     const fetchClasses = async () => {
         // const { data: { user } } = await supabase.auth.getUser()
         let viewName = 'enrollment_view';
@@ -110,6 +111,10 @@ const View: React.FC<ViewProps> = (props) => {
         }
 
     }
+    const [present, dismiss] = useIonModal(AddClass,{
+        dismiss: () => dismiss(),
+    })
+
     useEffect(() => {
         if (user){
             setMetadata(user?.user_metadata)
@@ -148,33 +153,18 @@ const View: React.FC<ViewProps> = (props) => {
                         <IonIcon icon = {settingsOutline} className = "settings-button-ion-icon"></IonIcon>
                     </IonButton>
                 </div>
-                <IonButton id = "open-modal" expand="block">
-                    Add Class
-                </IonButton>
-                <AddClass ref = {modal} trigger="open-modal" />
                 {metadata?.user_type === "student" && (
-                <IonCard className = "card-class round-border">
-                    <div className = "flex align-center ion-margin-vertical">
-                        <h4>Enroll in a Class</h4>
-                    </div>
-                    <div>
-                        <form onSubmit={addClass}>
-                            <IonInput required 
-                                name = "class_id"
-                                label = "Place Enrollment Key" 
-                                labelPlacement="floating" 
-                                fill = "outline" 
-                                placeholder = "Enrollment Key"
-                                onIonInput={(event) => validateClassId(event)}
-                                onIonChange={handleChange}
-                                />
-                            <IonButton type = 'submit' expand = "block" className = "ion-margin-top">
-                                Enroll
-                            </IonButton>
-                        </form>
-                    </div>
-                    
-                </IonCard>)}
+                <>
+                    <IonButton id = "open-modal" expand="block">
+                    Add Class
+                    </IonButton>
+                    <AddClass 
+                    user = {user} 
+                    onFetchClasses = {fetchClasses} 
+                    onSetAlertData = {setAlertData}
+                    trigger="open-modal" />
+                </>)
+                }
                 <h1 className="font-heavy">Your Classes</h1>
                 {courses && courses.map((item: Class) => (
                     <ClassCard
