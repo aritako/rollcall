@@ -34,6 +34,10 @@
     background-color: black;
 }
 
+.main-card{
+    width: 100%;
+}
+
 ion-card.main-card:hover{
     cursor: pointer;
 }

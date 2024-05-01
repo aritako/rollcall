@@ -6,6 +6,7 @@ import View from './View';
 import Scan from './Scan';
 import Profile from './Profile';
 import ViewDetails from './ViewDetails';
+import MarkAttendance from './MarkAttendance';
 
 const Dashboard: React.FC = () => {
 
@@ -29,6 +30,7 @@ const Dashboard: React.FC = () => {
         <IonRouterOutlet>
           <Route exact path="/app/dashboard/view" component={View} />
           <Route exact path='/app/dashboard/view/:id' component={ViewDetails} />
+          <Route exact path='/app/dashboard/attendance/:id' component={MarkAttendance} />
           <Route path="/app/dashboard/scan" component={Scan} />
           <Route path="/app/dashboard/profile" component={Profile} />
           <Route exact path="/app/dashboard">

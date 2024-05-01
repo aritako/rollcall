@@ -1,0 +1,22 @@
+.div-mark-attendance{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 10rem;
+    gap: 10px;
+}
+
+.div-mark-attendance > .mark-title{
+    text-align: center;
+    margin: 0 auto; 
+}
+
+.mark-title{
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.mark-confirm{
+    font-size: 12px;
+}
