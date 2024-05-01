@@ -6,10 +6,14 @@ import View from './View';
 import Scan from './Scan';
 import Profile from './Profile';
 import ViewDetails from './ViewDetails';
+import { User } from '@supabase/supabase-js';
 import MarkAttendance from './MarkAttendance';
 
-const Dashboard: React.FC = () => {
-
+interface DashboardProps {
+  user: User | null;
+}
+const Dashboard: React.FC<DashboardProps> = (props) => {
+  const {user} = props
     return (
         <IonTabs>
         <IonTabBar slot="bottom">
@@ -19,7 +23,7 @@ const Dashboard: React.FC = () => {
           </IonTabButton>
           <IonTabButton tab="Scan" href="/app/dashboard/scan">
             <IonIcon icon={ellipse} />
-            <IonLabel>Scan</IonLabel>
+            <IonLabel>{user?.user_metadata.user_type === "professor" ? "Generate" : "Scan"}</IonLabel>
           </IonTabButton>
           <IonTabButton tab="Profile" href="/app/dashboard/profile">
             <IonIcon icon={square} />
@@ -28,7 +32,7 @@ const Dashboard: React.FC = () => {
         </IonTabBar>
   
         <IonRouterOutlet>
-          <Route exact path="/app/dashboard/view" component={View} />
+          <Route exact path="/app/dashboard/view" render={(props) => <View {...props} user={user} />} />
           <Route exact path='/app/dashboard/view/:id' component={ViewDetails} />
           <Route exact path='/app/dashboard/attendance/:id' component={MarkAttendance} />
           <Route path="/app/dashboard/scan" component={Scan} />
@@ -38,19 +42,6 @@ const Dashboard: React.FC = () => {
           </Route>
         </IonRouterOutlet>
       </IonTabs>
-        // <IonPage>
-        //     <IonHeader>
-        //         <IonToolbar>
-        //             <IonButtons slot = "start">
-        //                 <IonMenuButton/>
-        //             </IonButtons>
-        //             <IonTitle>Dashboard</IonTitle>
-        //         </IonToolbar>
-        //     </IonHeader>
-        //     <IonContent className="ion-padding">
-        //         Dashboard
-        //     </IonContent>
-        // </IonPage>
     );
 };
 
