@@ -4,7 +4,7 @@ import { BarcodeFormat, BarcodeScanner, LensFacing, StartScanOptions } from '@ca
 import React, { useEffect, useState } from 'react';
 import { error } from 'console';
 import { returnUpBackOutline } from 'ionicons/icons';
-import './Scan.css';
+import './scan.css';
 import QRCodeGen from '../components/QRCodeGen';
 import { User, UserMetadata } from '@supabase/supabase-js';
 import { Router } from 'react-router';

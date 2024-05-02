@@ -14,12 +14,17 @@ type Class = {
     professor: string;
     toggle?: boolean;
 };
+
 interface MarkAttendanceProps extends RouteComponentProps<{
     id: string;
 }> {}
 
 const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
     const router = useIonRouter();
+    const [alertData, setAlertData] = useState({
+        show: false,
+        message: ""
+    })
     const [classData, setClassData] = useState<Class>({
         id: -1,
         course_name: "",
@@ -34,9 +39,24 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
         const { checked } = event.target as HTMLInputElement;
         setIsChecked(checked)
     }
-    const submitAttendance = () => {
+
+    async function submitAttendance(event: any) {
         console.log("Attendance confirmed");
         router.push("/app/dashboard/view", 'forward', 'replace');
+        const { data: { user } } = await supabase.auth.getUser()
+        const { error } = await supabase
+            .from('attendance')
+            .insert({student_number: user?.user_metadata.student_number, class_id: classData.id, timestamp: (new Date()).toISOString()})
+            console.log(user?.user_metadata.student_number)
+            console.log(classData.id)
+            console.log((new Date()).toISOString())
+            if (error){
+                console.log('oh no')
+                setAlertData({show: true, message: "Can't log attendance"})
+            } else{
+                console.log('yay')
+                setAlertData({show: true, message: "Successfully logged attendance!"})
+        }
     }
 
     useEffect(() => {
