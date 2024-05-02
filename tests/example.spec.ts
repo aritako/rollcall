@@ -173,3 +173,21 @@ test('Professor generates QR', async ({ page }) => {
   await page.getByRole('button', { name: 'Generate QR Code' }).click();
   await expect(page.getByRole('img', { name: 'QR Code' })).toBeVisible();
 });
+
+/*
+test('Student scans and marks attendance in an enrolled class', async ({ page }) => {
+  await page.goto('/');
+  successLogin(page);
+  await page.goto('../app/dashboard/attendance/1');
+  await page.locator('label').getByRole('img').click();
+  await page.getByRole('button', { name: 'Confirm Attendance' }).click();
+  await expect(page.getByRole('heading', { name: 'Success' })).toBeVisible;
+});
+
+test('Student scans and marks attendance in an unenrolled class', async ({ page }) => {
+  await page.goto('/');
+  successLogin(page);
+  await page.goto('../app/dashboard/attendance/5');
+  await expect(page.getByRole('heading', { name: 'Error' })).toBeVisible;
+});
+*/
