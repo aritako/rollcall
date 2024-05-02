@@ -1,7 +1,9 @@
 import { IonButton, IonCheckbox, IonContent, IonGrid, IonHeader, IonPage, IonRow, IonText, IonTitle, IonToolbar, useIonRouter } from '@ionic/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './MarkAttendance.css';
 import ClassCard from '../components/ClassCard';
+import { Route, RouteComponentProps } from 'react-router';
+import supabase from '../config/supabaseClient';
 
 type Class = {
     id: number;
@@ -12,16 +14,19 @@ type Class = {
     professor: string;
     toggle?: boolean;
 };
+interface MarkAttendanceProps extends RouteComponentProps<{
+    id: string;
+}> {}
 
-const MarkAttendance: React.FC = () => {
+const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
     const router = useIonRouter();
     const [classData, setClassData] = useState<Class>({
-        id: 0,
-        course_name: "CS 192",
-        course_title: "Software Engineering II",
-        time_start: "7:30",
-        time_end: "8:30",
-        professor: "Solamo",
+        id: -1,
+        course_name: "",
+        course_title: "",
+        time_start: "",
+        time_end: "",
+        professor: "",
         toggle: false
     });
     const [isChecked, setIsChecked] = useState<boolean>(false);
@@ -33,6 +38,27 @@ const MarkAttendance: React.FC = () => {
         console.log("Attendance confirmed");
         router.push("/app/dashboard/view", 'forward', 'replace');
     }
+
+    useEffect(() => {
+        const id = match.params.id;
+        const fetchCurrentClass = async () => {
+            const {data, error} = await supabase
+            .from("sample_class")
+            .select()
+            .match({id: id});
+            if (error) {
+                console.log("ERROR:", error);
+            }
+            if (data) {
+                console.log(data)
+                setClassData(
+                    {...data[0]}
+                )
+            }
+        }
+        fetchCurrentClass();
+    },[]);
+
     return (
         <IonPage>
             <IonHeader>
