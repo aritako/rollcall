@@ -5,8 +5,6 @@ import QRCode from 'qrcode';
 import supabase from '../config/supabaseClient';
 import { IonItem, IonList, IonSelect, IonSelectOption, IonButton, IonButtons } from '@ionic/react';
 
-var classes_arr = new Array();
-var class2 = new Array();
 const QRCodeGen: React.FC = () => {
   const [classes, setName] = useState<any[]>([]);
 
@@ -23,13 +21,12 @@ const QRCodeGen: React.FC = () => {
     if (error) {
       console.error('Error fetching data:', error);
     } else {
-      // Handle the case where data might be null
       setName(data || []);
     }
   }
 
   const [selectedItem, setSelectedItem] = useState('');
-  const [attendanceId, setAttendanceId] = useState('');
+  //const [attendanceId, setAttendanceId] = useState('');
   const [qrCodeDataURL, setQrCodeDataURL] = useState('');
 
   // const fetchClasses = async () => {
@@ -59,8 +56,7 @@ const QRCodeGen: React.FC = () => {
   const generateQRCode = async () => {
 
     try {
-      // Replace 'localhost:3000' with your actual localhost address and port
-      const url = `http://localhost:8100/app/dashboard/attendance/${selectedItem}`;
+      const url = `/app/dashboard/attendance/${selectedItem}`;
       const dataURL = await QRCode.toDataURL(url);
       setQrCodeDataURL(dataURL);
     } catch (err) {
@@ -72,8 +68,6 @@ const QRCodeGen: React.FC = () => {
     setSelectedItem(e.detail.value);
     console.log(`ionChange fired with value: ${e.detail.value}`)
   };
-
-
 
   return (
     <div>

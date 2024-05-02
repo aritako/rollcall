@@ -9,9 +9,11 @@ This is a course requirement for CS 191/192 Software Engineering Courses of the 
 ## Setup
 This project uses the React library and the Ionic + Capacitor framework. Ionic is a UI framework that provides a wide range of components and features for building mobile apps, while Capacitor is a runtime that allows Ionic apps to be deployed to both iOS and Android devices.
 
-To get started, we install Ionic through `npm`:
+To get started, we install Ionic through `npm`, and other packages:
 ```
 npm i -g @ionic/cli
+npm i qrcode
+npm i @capacitor-mlkit/barcode-scanning
 ```
 To run the project in your local development server for app development and testing, i.e. through `localhost`:
 ```
