@@ -1,9 +1,10 @@
-import { IonButton, IonCheckbox, IonContent, IonGrid, IonHeader, IonPage, IonRow, IonText, IonTitle, IonToolbar, useIonRouter } from '@ionic/react';
+import { IonButton, IonCheckbox, IonContent, IonGrid, IonHeader, IonPage, IonRow, IonText, IonTitle, IonToolbar, useIonRouter, useIonAlert } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import './MarkAttendance.css';
 import ClassCard from '../components/ClassCard';
 import { Route, RouteComponentProps } from 'react-router';
 import supabase from '../config/supabaseClient';
+import { waitFor } from '@testing-library/dom';
 
 type Class = {
     id: number;
@@ -21,6 +22,8 @@ interface MarkAttendanceProps extends RouteComponentProps<{
 
 const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
     const router = useIonRouter();
+    const [presentAlert] = useIonAlert();
+    
     const [alertData, setAlertData] = useState({
         show: false,
         message: ""
@@ -40,22 +43,55 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
         setIsChecked(checked)
     }
 
-    async function submitAttendance(event: any) {
-        console.log("Attendance confirmed");
-        router.push("/app/dashboard/view", 'forward', 'replace');
+
+    async function submitAttendance(event: any){
         const { data: { user } } = await supabase.auth.getUser()
         const { error } = await supabase
             .from('attendance')
             .insert({student_number: user?.user_metadata.student_number, class_id: classData.id, timestamp: (new Date()).toISOString()})
-            console.log(user?.user_metadata.student_number)
-            console.log(classData.id)
-            console.log((new Date()).toISOString())
             if (error){
+                console.log(error)
                 console.log('oh no')
-                setAlertData({show: true, message: "Can't log attendance"})
-            } else{
+                // alert
+            }
+            else{
                 console.log('yay')
-                setAlertData({show: true, message: "Successfully logged attendance!"})
+                // alert
+                presentAlert({
+                    header: 'Success',
+                    message: 'Attendance checked!',
+                    buttons: [{
+                        text: 'Back',
+                        handler: () => {
+                            router.push("/app/dashboard/view", 'forward', 'replace');
+                        }
+                    }],
+                  })
+                router.push("/app/dashboard/view", 'forward', 'replace');
+            }
+    }
+
+    const checkClasses = async () => {
+        const { data: { user } } = await supabase.auth.getUser()
+        console.log('checking')
+        var id = router.routeInfo.pathname.replace('/app/dashboard/attendance/', '')
+        const { data, error } = await supabase
+            .from('enrollment_view')
+            .select()
+            .eq('student_number', user?.user_metadata?.student_number)
+            .eq('id', id)
+        console.log(data)
+        if (data?.length == 0){
+            presentAlert({
+                header: 'Error',
+                message: 'Not enrolled in this class!',
+                buttons: [{
+                    text: 'OK',
+                    handler: () => {
+                        router.push("/app/dashboard/view", 'forward', 'replace');
+                    }
+                }],
+              })
         }
     }
 
@@ -70,13 +106,14 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
                 console.log("ERROR:", error);
             }
             if (data) {
-                console.log(data)
+                //console.log(data)
                 setClassData(
                     {...data[0]}
                 )
             }
         }
         fetchCurrentClass();
+        checkClasses();
     },[]);
 
     return (
