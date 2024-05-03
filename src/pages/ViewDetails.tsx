@@ -3,9 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import supabase from '../config/supabaseClient';
 import AttendanceReport from './AttendanceReport';
+import { User } from '@supabase/supabase-js';
 interface DetailsPageProps extends RouteComponentProps<{
     id: string;
-}> {}
+}> {
+    user: User | null;
+}
 
 interface Student {
     id: string;
@@ -13,7 +16,7 @@ interface Student {
     last_name: string;
 }
 
-const ViewDetails: React.FC<DetailsPageProps> = ({match}) => {
+const ViewDetails: React.FC<DetailsPageProps> = ({match, user}) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [students, setStudents] = useState<Student[]>([]);
     const [userType, setUserType] = useState<string>('');
@@ -21,16 +24,14 @@ const ViewDetails: React.FC<DetailsPageProps> = ({match}) => {
         console.log('SEARCH', searchTerm)
     }, [searchTerm]);
     useEffect(() => {
-        const fetchUserType = async () => {
-            const { data: { user } } = await supabase.auth.getUser()
+        if (user){
             if (user?.user_metadata?.user_type == 'professor') {
                 setUserType('professor')
             } else {
                 setUserType('student')
             }
         }
-        fetchUserType();
-    }, [students]);
+    }, [user]);
     useIonViewWillEnter( () => {
         const id = match.params.id;
         const fetchClasses = async () => {
@@ -81,7 +82,7 @@ const ViewDetails: React.FC<DetailsPageProps> = ({match}) => {
                 </IonContent>
                 :
                 <IonContent className="ion-padding">
-                    <AttendanceReport />
+                    <AttendanceReport class_id = {match.params.id} user = {user}/>
                 </IonContent>
             }
         </IonPage>
