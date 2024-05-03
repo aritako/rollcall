@@ -102,8 +102,9 @@ test('Navigate to Profile tab', async ({ page }) => {
 test('Student succesfully enrolls in class', async ({ page }) => {
   await page.goto('/');
   successLogin(page);
-  await page.getByLabel('Place Enrollment KeyPlace').fill('3');
-  await page.getByRole('button', { name: 'Enroll' }).click();
+  await page.getByRole('button', { name: 'Add Class' }).click();
+  await page.getByLabel('Enrollment KeyEnrollment Key').fill('4');
+  await page.getByRole('button', { name: 'Submit' }).click();
   page.on("dialog", async (alert) => {
     const text = alert.message();
     await expect(text == 'Succesfully added class!');
@@ -114,8 +115,9 @@ test('Student succesfully enrolls in class', async ({ page }) => {
 test('Student attempts to enroll in already enrolled class', async ({ page }) => {
   await page.goto('/');
   successLogin(page);
-  await page.getByLabel('Place Enrollment KeyPlace').fill('1');
-  await page.getByRole('button', { name: 'Enroll' }).click();
+  await page.getByRole('button', { name: 'Add Class' }).click();
+  await page.getByLabel('Enrollment KeyEnrollment Key').fill('1');
+  await page.getByRole('button', { name: 'Submit' }).click();
   page.on("dialog", async (alert) => {
     const text = alert.message();
     await expect(text == 'duplicate key value violates unique constraint "learners_pkey"');
@@ -150,6 +152,42 @@ test('Professor clicks a class', async ({ page }) => {
   await page.getByLabel('UP EmailUP Email').fill('professor@gmail.com');
   await page.getByLabel('PasswordPassword').click();
   await page.getByLabel('PasswordPassword').fill('testpassword');
-  await page.getByRole('button', { name: 'Login' }).click();  await page.getByText('CS 1927:30 AMSoftware').click();
+  await page.getByRole('button', { name: 'Login' }).click();  
+  await page.getByText('CS 1927:30 AMSoftware').click();
   await expect(page.getByRole('heading', { name: 'Class List' })).toBeVisible();
 });
+
+test('Professor generates QR', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Next' }).first().click();
+  await page.getByRole('button', { name: 'Next' }).nth(1).click();
+  await page.getByRole('button', { name: 'Finish' }).click();
+  await page.getByLabel('UP EmailUP Email').fill('professor@gmail.com');
+  await page.getByLabel('PasswordPassword').click();
+  await page.getByLabel('PasswordPassword').fill('testpassword');
+  await page.getByRole('button', { name: 'Login' }).click();  
+  await page.getByText('Generate').click();
+  await page.locator('div').filter({ hasText: /^Select class$/ }).first().click();
+  await page.getByRole('radio', { name: 'Math' }).click();
+  await page.getByRole('button', { name: 'OK' }).click();
+  await page.getByRole('button', { name: 'Generate QR Code' }).click();
+  await expect(page.getByRole('img', { name: 'QR Code' })).toBeVisible();
+});
+
+/*
+test('Student scans and marks attendance in an enrolled class', async ({ page }) => {
+  await page.goto('/');
+  successLogin(page);
+  await page.goto('../app/dashboard/attendance/1');
+  await page.locator('label').getByRole('img').click();
+  await page.getByRole('button', { name: 'Confirm Attendance' }).click();
+  await expect(page.getByRole('heading', { name: 'Success' })).toBeVisible;
+});
+
+test('Student scans and marks attendance in an unenrolled class', async ({ page }) => {
+  await page.goto('/');
+  successLogin(page);
+  await page.goto('../app/dashboard/attendance/5');
+  await expect(page.getByRole('heading', { name: 'Error' })).toBeVisible;
+});
+*/

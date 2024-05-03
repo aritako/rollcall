@@ -1,8 +1,9 @@
 import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonMenuButton, IonPage, IonTitle, IonToolbar, IonRefresher,
     IonRefresherContent, RefresherEventDetail,
     IonText,
-    IonAlert,} from '@ionic/react';
-import React, { useEffect, useState } from 'react';
+    IonAlert,
+    useIonModal,} from '@ionic/react';
+import React, { useEffect, useRef, useState } from 'react';
 import ClassCard from '../components/ClassCard';
 import Dashboard from './Dashboard';
 import './Dashboard.css';
@@ -10,7 +11,8 @@ import './View.css';
 import UserImage from '../assets/user.png'
 import { compassSharp, settingsOutline } from 'ionicons/icons';
 import supabase from '../config/supabaseClient';
-import { Session, UserMetadata } from '@supabase/supabase-js';
+import { Session, User, UserMetadata } from '@supabase/supabase-js';
+import AddClass from '../components/AddClass';
 
 type Class = {
     id: number;
@@ -19,12 +21,15 @@ type Class = {
     time_start: string;
     time_end: string;
     professor: string;
+    toggle: boolean;
 };
-
-const View: React.FC = () => {
+interface ViewProps {
+    user: User | null;
+}
+const View: React.FC<ViewProps> = (props) => {
+    const { user } = props
     const [fetchError, setFetchError] : Array<any> = useState(null)
     const [courses, setCourses] : Array<any> = useState(null)
-    const [session, setSession] = useState<Session | null>(null)
     const [metadata, setMetadata] = useState<UserMetadata | null | undefined>(null)
     const [isClassIdValid, setIsClassIdValid] = useState<boolean>();
     const [formData, setFormData] = useState({
@@ -34,9 +39,9 @@ const View: React.FC = () => {
         show: false,
         message: ""
     })
+    // const modal = useRef<HTMLIonModalElement>(null);
     const fetchClasses = async () => {
-        const { data: { user } } = await supabase.auth.getUser()
-
+        // const { data: { user } } = await supabase.auth.getUser()
         let viewName = 'enrollment_view';
         let idColumnName = 'student_number';
         if (user?.user_metadata?.user_type == 'professor') {  
@@ -67,7 +72,6 @@ const View: React.FC = () => {
         }, 2000);
     }
     
-
     const handleChange = (event : any) => {
         setFormData((prevData) => {
             return {
@@ -91,49 +95,10 @@ const View: React.FC = () => {
     
         validateClassIdFormat(value) !== null ? setIsClassIdValid(true) : setIsClassIdValid(false);
       };
-    useEffect(() => {
-        const fetchSession = async () => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session)
-            setMetadata(session?.user?.user_metadata)
-        })
-        };
-        fetchSession();
-    }, []);
-    
-    useEffect(() => {
-        const fetchClasses = async () => {
-            const { data: { user } } = await supabase.auth.getUser()
-
-            let viewName = 'enrollment_view';
-            let idColumnName = 'student_number';
-            if (user?.user_metadata?.user_type == 'professor') {  
-                viewName = 'teaching_view';
-                idColumnName = 'professor_id';
-            }
-    
-            const { data, error } = await supabase
-            .from(viewName)
-            .select()
-            .eq(idColumnName, user?.user_metadata?.student_number);
-    
-            if (error) {
-                setFetchError("An error occurred while fetching classes")
-                setCourses(null)
-                console.log(error)
-            }
-            if (data){
-                setCourses(data)
-                setFetchError(null)
-            }
-        }
-        fetchClasses()
-    }, [])
-
     async function addClass(event: any){
         event.preventDefault();
-        const { data: { user } } = await supabase.auth.getUser()
-        const { data, error } = await supabase
+        // const { data: { user } } = await supabase.auth.getUser()
+        const { error } = await supabase
             .from('learners')
             .insert({student_number: user?.user_metadata.student_number, class_id: formData.class_id})
             console.log(user?.user_metadata.student_number)
@@ -147,7 +112,17 @@ const View: React.FC = () => {
         }
 
     }
-    // console.log(metadata)
+    const [present, dismiss] = useIonModal(AddClass,{
+        dismiss: () => dismiss(),
+    })
+
+    useEffect(() => {
+        if (user){
+            setMetadata(user?.user_metadata)
+            fetchClasses();
+        }
+    }, [user]);
+    
     return (
         <>
         <IonPage>
@@ -180,33 +155,23 @@ const View: React.FC = () => {
                     </IonButton>
                 </div>
                 {metadata?.user_type === "student" && (
-                <IonCard className = "card-class round-border">
-                    <div className = "flex align-center ion-margin-vertical">
-                        <h4>Enroll in a Class</h4>
-                    </div>
-                    <div>
-                        <form onSubmit={addClass}>
-                            <IonInput required 
-                                name = "class_id"
-                                label = "Place Enrollment Key" 
-                                labelPlacement="floating" 
-                                fill = "outline" 
-                                placeholder = "Enrollment Key"
-                                onIonInput={(event) => validateClassId(event)}
-                                onIonChange={handleChange}
-                                />
-                            <IonButton type = 'submit' expand = "block" className = "ion-margin-top">
-                                Enroll
-                            </IonButton>
-                        </form>
-                    </div>
-                    
-                </IonCard>)}
+                <>
+                    <IonButton id = "open-modal" expand="block">
+                    Add Class
+                    </IonButton>
+                    <AddClass 
+                    user = {user} 
+                    onFetchClasses = {fetchClasses} 
+                    onSetAlertData = {setAlertData}
+                    trigger="open-modal" />
+                </>)
+                }
                 <h1 className="font-heavy">Your Classes</h1>
                 {courses && courses.map((item: Class) => (
                     <ClassCard
                         key={item.id}
                         {...item}
+                        toggle={true}
                     />
                 ))}
                 

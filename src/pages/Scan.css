@@ -1,0 +1,11 @@
+.qr-scanner-active {
+    visibility: hidden;
+    --background: transparent;
+    --ion-background-color: transparent;
+}
+
+.bottom {
+    position: absolute;
+    bottom: 0px;
+    align-self: center;
+}
