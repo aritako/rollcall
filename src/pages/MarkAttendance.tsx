@@ -1,4 +1,4 @@
-import { IonButton, IonCheckbox, IonContent, IonGrid, IonHeader, IonPage, IonRow, IonText, IonTitle, IonToolbar, useIonRouter, useIonAlert } from '@ionic/react';
+import { IonButton, IonCheckbox, IonContent, IonGrid, IonHeader, IonPage, IonRow, IonText, IonTitle, IonToolbar, useIonRouter, useIonAlert, IonSkeletonText } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import './MarkAttendance.css';
 import ClassCard from '../components/ClassCard';
@@ -23,11 +23,7 @@ interface MarkAttendanceProps extends RouteComponentProps<{
 const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
     const router = useIonRouter();
     const [presentAlert] = useIonAlert();
-    
-    const [alertData, setAlertData] = useState({
-        show: false,
-        message: ""
-    })
+    const [validUser, setValidUser] = useState<boolean>(false);
     const [classData, setClassData] = useState<Class>({
         id: -1,
         course_name: "",
@@ -60,6 +56,7 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
                 presentAlert({
                     header: 'Success',
                     message: 'Attendance checked!',
+                    backdropDismiss: false,
                     buttons: [{
                         text: 'Back',
                         handler: () => {
@@ -85,6 +82,7 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
             presentAlert({
                 header: 'Error',
                 message: 'Not enrolled in this class!',
+                backdropDismiss: false,
                 buttons: [{
                     text: 'OK',
                     handler: () => {
@@ -92,6 +90,8 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
                     }
                 }],
               })
+        } else {
+            setValidUser(true)
         }
     }
 
@@ -120,10 +120,12 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    <IonTitle>Generate QR Code</IonTitle>
+                    <IonTitle>Mark Attendance</IonTitle>
                 </IonToolbar>
             </IonHeader>
+            
             <IonContent className="ion-padding center">
+            {validUser ? 
                 <div className = "div-mark-attendance">
                     <div className = "mark-title">You are confirming your attendance for</div>
                     <div className = "mark-card">
@@ -141,7 +143,23 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
                             Confirm Attendance
                     </IonButton>
                 </div>
-            </IonContent>
+                : 
+                <div className = "div-mark-attendance">
+                    <div className = "mark-title">You are confirming your attendance for</div>
+                    <div className = "mark-card">
+                    <div className = "mark-skelly-card">
+                        <IonSkeletonText animated={true}></IonSkeletonText>
+                    </div>
+                    </div>
+                    <div className = "mark-skelly-checkbox">
+                        <IonSkeletonText animated={true}></IonSkeletonText>
+                    </div>
+                    <div className = "mark-skelly-confirm">
+                        <IonSkeletonText animated={true}></IonSkeletonText>
+                    </div>
+                </div>
+                }
+            </IonContent> 
         </IonPage>
     );
 };
