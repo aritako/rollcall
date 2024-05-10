@@ -104,7 +104,7 @@ test('Student succesfully enrolls in class', async ({ page }) => {
   successLogin(page);
   await page.getByRole('button', { name: 'Add Class' }).click();
   await page.getByLabel('Enrollment KeyEnrollment Key').fill('4');
-  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByRole('button', { name: 'Enroll' }).click();
   page.on("dialog", async (alert) => {
     const text = alert.message();
     await expect(text == 'Succesfully added class!');
@@ -117,7 +117,7 @@ test('Student attempts to enroll in already enrolled class', async ({ page }) =>
   successLogin(page);
   await page.getByRole('button', { name: 'Add Class' }).click();
   await page.getByLabel('Enrollment KeyEnrollment Key').fill('1');
-  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByRole('button', { name: 'Enroll' }).click();
   page.on("dialog", async (alert) => {
     const text = alert.message();
     await expect(text == 'duplicate key value violates unique constraint "learners_pkey"');
