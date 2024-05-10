@@ -39,7 +39,6 @@ const View: React.FC<ViewProps> = (props) => {
         show: false,
         message: ""
     })
-    // const modal = useRef<HTMLIonModalElement>(null);
     const fetchClasses = async () => {
         // const { data: { user } } = await supabase.auth.getUser()
         let viewName = 'enrollment_view';
@@ -113,7 +112,10 @@ const View: React.FC<ViewProps> = (props) => {
 
     }
     const [present, dismiss] = useIonModal(AddClass,{
+        user: user,
         dismiss: () => dismiss(),
+        onFetchClasses: fetchClasses,
+        onSetAlertData: setAlertData,
     })
 
     useEffect(() => {
@@ -156,14 +158,9 @@ const View: React.FC<ViewProps> = (props) => {
                 </div>
                 {metadata?.user_type === "student" && (
                 <>
-                    <IonButton id = "open-modal" expand="block">
+                    <IonButton expand="block" onClick = {() => present()}>
                     Add Class
                     </IonButton>
-                    <AddClass 
-                    user = {user} 
-                    onFetchClasses = {fetchClasses} 
-                    onSetAlertData = {setAlertData}
-                    trigger="open-modal" />
                 </>)
                 }
                 <h1 className="font-heavy">Your Classes</h1>

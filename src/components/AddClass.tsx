@@ -5,12 +5,12 @@ import supabase from '../config/supabaseClient';
 import { User } from '@supabase/supabase-js';
 interface AddClassProps {
     user: User | null;
-    trigger: string;
+    dismiss: () => void;
     onFetchClasses: () => void;
     onSetAlertData: (data: {show: boolean, message: string}) => void;
 }
 const AddClass: React.FC<AddClassProps> = (props) => {
-    const {user, trigger, onFetchClasses, onSetAlertData} = props;
+    const {user, dismiss, onFetchClasses, onSetAlertData} = props;
     const [enrollmentKey, setEnrollmentKey] = useState<string>('');
     const handleChange = (event: any) => {
         setEnrollmentKey(event.target.value);
@@ -28,13 +28,24 @@ const AddClass: React.FC<AddClassProps> = (props) => {
             onSetAlertData({show: true, message: "You're already in this class!"})
           } else{
             onSetAlertData({show: true, message: "Successfully added class!"})
-      }
+          }
+          dismiss()
     }
     return (
-        <IonModal className = "enrollKey" trigger = {trigger} initialBreakpoint={1} breakpoints={[0, 1]}>
+        <IonPage>
           <IonHeader>
             <IonToolbar>
-              <IonTitle>Add Class</IonTitle>
+            <IonButtons slot="start">
+              <IonButton color="medium" onClick={() => dismiss()}>
+                Cancel
+              </IonButton>
+            </IonButtons>
+            
+            <IonButtons slot="end">
+              <IonButton onClick={() => dismiss()} strong={true}>
+                Confirm
+            </IonButton>
+          </IonButtons>
             </IonToolbar>
           </IonHeader>
           <IonContent className="ion-padding">
@@ -50,10 +61,10 @@ const AddClass: React.FC<AddClassProps> = (props) => {
                 onIonInput = {handleChange} 
                 value = {enrollmentKey}
                 />
-              <IonButton className = "test" type="submit">Submit</IonButton>
+              <IonButton className = "test" type="submit">Enroll</IonButton>
             </form>
           </IonContent>
-        </IonModal>
+        </IonPage>
     );
 };
 
