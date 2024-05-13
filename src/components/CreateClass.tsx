@@ -35,17 +35,12 @@ const CreateClass: React.FC<AddClassProps> = (props) => {
         <IonPage>
           <IonHeader>
             <IonToolbar>
-            <IonButtons slot="start">
-              <IonButton color="medium" onClick={() => dismiss()}>
-                Cancel
-              </IonButton>
-            </IonButtons>
-
-            <IonButtons slot="end">
-              <IonButton onClick={() => dismiss()} strong={true}>
-                Confirm
-            </IonButton>
-          </IonButtons>
+              <IonTitle>Add Class</IonTitle>
+              <IonButtons slot="end">
+                <IonButton color="medium" onClick={() => dismiss()}>
+                  Cancel
+                </IonButton>
+              </IonButtons>
             </IonToolbar>
           </IonHeader>
           <IonContent className="ion-padding">
