@@ -11,8 +11,8 @@ interface AddClassProps {
 }
 
 const customActionSheetOptions = {
-  header: 'User Type',
-  subHeader: 'Please select whether you are a student or a professor.',
+  header: 'Semester',
+  subHeader: 'Please select the appropriate semester.',
 };
 
 const CreateClass: React.FC<AddClassProps> = (props) => {
@@ -24,6 +24,7 @@ const CreateClass: React.FC<AddClassProps> = (props) => {
       classYear: "",
       classStartTime: "",
       classEndTime: "",
+      maxAbsences: 0,
     })
     console.log(formData)
     const handleChange = (event: any) => {
@@ -34,7 +35,7 @@ const CreateClass: React.FC<AddClassProps> = (props) => {
             }
         })
     }
-    async function addClass(event: any){
+    async function createClass(event: any){
       event.preventDefault();
       // const { error } = await supabase
       //     .from('learners')
@@ -115,7 +116,7 @@ const CreateClass: React.FC<AddClassProps> = (props) => {
                 <IonInput required 
                 name = "classStartTime" 
                 type = "time" 
-                label = "Starting Time" 
+                label = "Start Time" 
                 labelPlacement="floating" 
                 fill = "outline" 
                 onIonInput = {handleChange} 
@@ -124,13 +125,23 @@ const CreateClass: React.FC<AddClassProps> = (props) => {
                 <IonInput required 
                 name = "classEndTime" 
                 type = "time" 
-                label = "Ending Time" 
+                label = "End Time" 
                 labelPlacement="floating" 
                 fill = "outline" 
                 onIonInput = {handleChange} 
                 value = {formData.classEndTime}
                 />
                 </div>
+                <IonInput required 
+                name = "maxAbsences" 
+                type = "number" 
+                label = "Max No. of Absences" 
+                labelPlacement="floating"
+                placeholder = "e.g. 7"
+                fill = "outline" 
+                onIonInput = {handleChange} 
+                value = {formData.maxAbsences}
+                />
               <IonButton disabled className = "test" type="submit">Enroll</IonButton>
             </form>
           </IonContent>
