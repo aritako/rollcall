@@ -115,9 +115,9 @@ const View: React.FC<ViewProps> = (props) => {
         }
 
     }
-    const [present, dismiss] = useIonModal(AddClass,{
+    const [presentModal, dismissModal] = useIonModal(AddClass,{
         user: user,
-        dismiss: () => dismiss(),
+        dismiss: () => dismissModal(),
         onFetchClasses: fetchClasses,
         onSetAlertData: setAlertData,
     })
@@ -147,8 +147,8 @@ const View: React.FC<ViewProps> = (props) => {
             <IonContent className="ion-padding">
                 
             <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
-          <IonRefresherContent></IonRefresherContent>
-        </IonRefresher>
+            <IonRefresherContent></IonRefresherContent>
+            </IonRefresher>
                 <div className = "dashboard-header flex align-center ion-margin-vertical">
                     <div className = "parent-user-header">
                         <img 
@@ -164,7 +164,7 @@ const View: React.FC<ViewProps> = (props) => {
                         <IonIcon icon = {settingsOutline} className = "settings-button-ion-icon"></IonIcon>
                     </IonButton>
                 </div>
-                <IonButton expand="block" onClick = {() => present()}>
+                <IonButton expand="block" onClick = {() => presentModal()}>
                 {metadata?.user_type === "student" ? "Add Class" : "Create Class"}
                 </IonButton>
                 <h1 className="font-heavy">Your Classes</h1>
