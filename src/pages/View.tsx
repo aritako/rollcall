@@ -2,7 +2,9 @@ import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardS
     IonRefresherContent, RefresherEventDetail,
     IonText,
     IonAlert,
-    useIonModal,} from '@ionic/react';
+    useIonModal,
+    IonLoading,
+    useIonLoading,} from '@ionic/react';
 import React, { useEffect, useRef, useState } from 'react';
 import ClassCard from '../components/ClassCard';
 import Dashboard from './Dashboard';
@@ -13,6 +15,7 @@ import { compassSharp, settingsOutline } from 'ionicons/icons';
 import supabase from '../config/supabaseClient';
 import { Session, User, UserMetadata } from '@supabase/supabase-js';
 import AddClass from '../components/AddClass';
+import ViewLoading from '../components/loading/ViewLoading';
 
 type Class = {
     id: number;
@@ -39,8 +42,9 @@ const View: React.FC<ViewProps> = (props) => {
         show: false,
         message: ""
     })
-    const fetchClasses = async () => {
-        // const { data: { user } } = await supabase.auth.getUser()
+    const [loading, setLoading] = useState(true)
+    const fetchClasses = async (init = false) => {
+        if(init) setLoading(true)
         let viewName = 'enrollment_view';
         let idColumnName = 'student_number';
         if (user?.user_metadata?.user_type == 'professor') {  
@@ -62,8 +66,8 @@ const View: React.FC<ViewProps> = (props) => {
             setCourses(data)
             setFetchError(null)
         }
+        if (init) setLoading(false)
     }
-    
     function handleRefresh(event: CustomEvent<RefresherEventDetail>) {
         setTimeout(() => {
         fetchClasses()
@@ -121,13 +125,16 @@ const View: React.FC<ViewProps> = (props) => {
     useEffect(() => {
         if (user){
             setMetadata(user?.user_metadata)
-            fetchClasses();
+            fetchClasses(true);
         }
     }, [user]);
-    
+
     return (
         <>
         <IonPage>
+        {(loading) ? 
+            <ViewLoading />
+            : <>
             <IonHeader>
                 <IonToolbar>
                     <IonButtons slot="start">
@@ -138,6 +145,7 @@ const View: React.FC<ViewProps> = (props) => {
             </IonHeader>
             {fetchError && <div>{fetchError}</div>}
             <IonContent className="ion-padding">
+                
             <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
@@ -156,13 +164,9 @@ const View: React.FC<ViewProps> = (props) => {
                         <IonIcon icon = {settingsOutline} className = "settings-button-ion-icon"></IonIcon>
                     </IonButton>
                 </div>
-                {metadata?.user_type === "student" && (
-                <>
-                    <IonButton expand="block" onClick = {() => present()}>
-                    Add Class
-                    </IonButton>
-                </>)
-                }
+                <IonButton expand="block" onClick = {() => present()}>
+                {metadata?.user_type === "student" ? "Add Class" : "Create Class"}
+                </IonButton>
                 <h1 className="font-heavy">Your Classes</h1>
                 {courses && courses.map((item: Class) => (
                     <ClassCard
@@ -173,6 +177,8 @@ const View: React.FC<ViewProps> = (props) => {
                 ))}
                 
             </IonContent>
+            </>
+            }
         </IonPage>
         <IonAlert
             isOpen={alertData.show}
