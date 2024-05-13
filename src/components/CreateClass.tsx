@@ -35,7 +35,7 @@ const CreateClass: React.FC<AddClassProps> = (props) => {
         <IonPage>
           <IonHeader>
             <IonToolbar>
-              <IonTitle>Add Class</IonTitle>
+              <IonTitle>Create Class</IonTitle>
               <IonButtons slot="end">
                 <IonButton color="medium" onClick={() => dismiss()}>
                   Cancel

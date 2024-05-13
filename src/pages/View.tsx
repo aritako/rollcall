@@ -16,6 +16,7 @@ import supabase from '../config/supabaseClient';
 import { Session, User, UserMetadata } from '@supabase/supabase-js';
 import AddClass from '../components/AddClass';
 import ViewLoading from '../components/loading/ViewLoading';
+import CreateClass from '../components/CreateClass';
 
 type Class = {
     id: number;
@@ -115,13 +116,19 @@ const View: React.FC<ViewProps> = (props) => {
         }
 
     }
-    const [presentModal, dismissModal] = useIonModal(AddClass,{
+    const [presentModalAdd, dismissModalAdd] = useIonModal(AddClass,{
         user: user,
-        dismiss: () => dismissModal(),
+        dismiss: () => dismissModalAdd(),
         onFetchClasses: fetchClasses,
         onSetAlertData: setAlertData,
     })
 
+    const [presentModalCreate, dismissModalCreate] = useIonModal(CreateClass,{
+        user: user,
+        dismiss: () => dismissModalCreate(),
+        onFetchClasses: fetchClasses,
+        onSetAlertData: setAlertData,
+    })
     useEffect(() => {
         if (user){
             setMetadata(user?.user_metadata)
@@ -164,9 +171,15 @@ const View: React.FC<ViewProps> = (props) => {
                         <IonIcon icon = {settingsOutline} className = "settings-button-ion-icon"></IonIcon>
                     </IonButton>
                 </div>
-                <IonButton expand="block" onClick = {() => presentModal()}>
-                {metadata?.user_type === "student" ? "Add Class" : "Create Class"}
+                {metadata?.user_type === "student" ?  
+                <IonButton expand="block" onClick = {() => presentModalAdd()}>
+                    Add Class
                 </IonButton>
+                : 
+                <IonButton expand="block" onClick = {() => presentModalCreate()}>
+                    Create Class
+                </IonButton>
+                }
                 <h1 className="font-heavy">Your Classes</h1>
                 {courses && courses.map((item: Class) => (
                     <ClassCard
