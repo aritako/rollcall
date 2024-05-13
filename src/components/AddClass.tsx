@@ -49,7 +49,7 @@ const AddClass: React.FC<AddClassProps> = (props) => {
             </IonToolbar>
           </IonHeader>
           <IonContent className="ion-padding">
-            <form onSubmit={addClass}>
+            <form onSubmit={addClass} className = "enroll-form">
               <IonInput required 
                 name = "enrollmentKey" 
                 type = "text" 

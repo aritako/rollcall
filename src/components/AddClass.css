@@ -1,3 +1,6 @@
-.enrollKey {
-    --height: 50%;
+.enroll-form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 18px;
 }
