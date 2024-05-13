@@ -1,0 +1,13 @@
+.create-form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 18px;
+}
+.sem-year, .start-end{
+    display:flex;
+    gap: 8px;
+}
+/* .custom{
+    --color: #898989;
+} */
