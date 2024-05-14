@@ -20,6 +20,7 @@ const CreateClass: React.FC<AddClassProps> = (props) => {
     const [formData, setFormData] = useState({
       classKey: "",
       className: "",
+      classTitle: "",
       classSemester: "",
       classYear: "",
       classStartTime: "",
@@ -71,7 +72,6 @@ const CreateClass: React.FC<AddClassProps> = (props) => {
                 labelPlacement="floating" 
                 fill = "outline" 
                 placeholder = "e.g. CS200KEY"
-                className = {"custom"}
                 onIonInput = {handleChange}
                 value = {formData.classKey}
                 />
@@ -82,9 +82,18 @@ const CreateClass: React.FC<AddClassProps> = (props) => {
                 labelPlacement="floating" 
                 fill = "outline" 
                 placeholder = "e.g. CS 200 WFR-1"
-                className = {"custom"}
                 onIonInput = {handleChange} 
                 value = {formData.className}
+                />
+                <IonInput required 
+                name = "classTitle" 
+                type = "text" 
+                label = "Class Title" 
+                labelPlacement="floating" 
+                fill = "outline" 
+                placeholder = "e.g. Software Engineering I"
+                onIonInput = {handleChange} 
+                value = {formData.classTitle}
                 />
                 <div className = "sem-year">
                 <IonSelect
