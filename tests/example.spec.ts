@@ -154,7 +154,7 @@ test('Professor clicks a class', async ({ page }) => {
   await page.getByLabel('PasswordPassword').fill('testpassword');
   await page.getByRole('button', { name: 'Login' }).click();  
   await page.getByText('CS 1927:30 AMSoftware').click();
-  await expect(page.getByRole('heading', { name: 'Class List' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Attendance Report' })).toBeVisible();
 });
 
 test('Professor generates QR', async ({ page }) => {
