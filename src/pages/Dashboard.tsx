@@ -8,6 +8,8 @@ import Profile from './Profile';
 import ViewDetails from './ViewDetails';
 import { User } from '@supabase/supabase-js';
 import MarkAttendance from './MarkAttendance';
+import AttendancePage from './Attendance';
+import ClassPage from './ClassPage';
 
 interface DashboardProps {
   user: User | null;
@@ -33,7 +35,12 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
   
         <IonRouterOutlet>
           <Route exact path="/app/dashboard/view" render={(props) => <View {...props} user={user} />} />
-          <Route exact path='/app/dashboard/view/:id' render={(props) => <ViewDetails {...props} user={user} />} />
+          <Route exact path='/app/dashboard/view/:id' 
+          render={(props) => user?.user_metadata.user_type === "professor" ? 
+            <ClassPage {...props} user={user} /> : 
+            <AttendancePage {...props} user={user} />
+          } 
+          />
           <Route exact path='/app/dashboard/attendance/:id' component={MarkAttendance} />
           <Route path="/app/dashboard/scan" render={(props) => <Scan {...props} user={user} />} />
           <Route path="/app/dashboard/profile" component={Profile} />

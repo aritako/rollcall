@@ -2,7 +2,7 @@ import { IonBackButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, Io
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import supabase from '../config/supabaseClient';
-import AttendanceReport from './AttendanceReport';
+import AttendanceReport from '../components/AttendanceReport';
 import { User } from '@supabase/supabase-js';
 interface DetailsPageProps extends RouteComponentProps<{
     id: string;
