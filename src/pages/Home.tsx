@@ -7,7 +7,6 @@ import './Home.css';
 import supabase from '../config/supabaseClient';
 import { useState, useEffect } from 'react';
 import { User } from '@supabase/supabase-js';
-import ViewDetails from './ViewDetails';
 
 
 const Home: React.FC = () => {

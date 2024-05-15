@@ -1,11 +1,12 @@
 import { IonBackButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, IonList, IonPage, IonSearchbar, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
-import supabase from '../config/supabaseClient';
-import AttendanceReport from '../components/AttendanceReport';
+import supabase from '../../config/supabaseClient';
+import AttendanceReport from '../../components/AttendanceReport';
 import { User } from '@supabase/supabase-js';
 interface DetailsPageProps extends RouteComponentProps<{
     id: string;
+    date?: string;
 }> {
     user: User | null;
 }
@@ -22,24 +23,10 @@ const formatDate = (dateString: string) => {
 };
 
 const ClassPage: React.FC<DetailsPageProps> = ({match, user}) => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [students, setStudents] = useState<Student[]>([]);
+    const {id} = match.params
     const [uniqueDays, setUniqueDays] = useState<string[]>([]);
     const [userType, setUserType] = useState<string>('');
     useEffect(() => {
-        console.log('SEARCH', searchTerm)
-    }, [searchTerm]);
-    useEffect(() => {
-        if (user){
-            if (user?.user_metadata?.user_type == 'professor') {
-                setUserType('professor')
-            } else {
-                setUserType('student')
-            }
-        }
-    }, [user]);
-    useEffect(() => {
-        const id = match.params.id;
         const fetchClasses = async () => {
             const { data, error } = await supabase
             .from("attendance")
@@ -52,16 +39,11 @@ const ClassPage: React.FC<DetailsPageProps> = ({match, user}) => {
             else{
                 const days = data.map(entry => entry.timestamp.split('T')[0])
                 const uniqueDays = [...new Set(days)]
-                const formattedDays = uniqueDays.map(day => formatDate(day))
-                setUniqueDays(formattedDays)
+                setUniqueDays(uniqueDays)
             }
         }
         fetchClasses();
-    });
-    if (!userType) {
-        // Render loading state or return null while userType is being fetched
-        return null;
-    }
+    },[]);
     return (
         <IonPage>
             <IonHeader>
@@ -73,17 +55,16 @@ const ClassPage: React.FC<DetailsPageProps> = ({match, user}) => {
                 </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding">
-                {/* <IonSearchbar value={searchTerm} 
-                    debounce = {300}
-                    onIonChange = {(e) => setSearchTerm(e.detail.value!)}>
-                </IonSearchbar> */}
-                <h1 className="font-heavy">Attendance Report</h1>
+                <h1 className="font-heavy"><center>Attendance Report</center></h1>
                 <IonList>
-                    {uniqueDays?.map((day: any) => (
-                        <IonItem key={day}>
-                            <IonLabel>{day}</IonLabel>
+                    {uniqueDays?.map((day: any) => {
+                        const formattedDay = formatDate(day)
+                        return(
+                        <IonItem key={day} routerLink = {`/app/dashboard/view/${id}/${day.split("-").join("")}`}>
+                            <IonLabel>{formattedDay}</IonLabel>
                         </IonItem>
-                    ))}
+                        )
+                    })}
                 </IonList>
             </IonContent>
         </IonPage>
