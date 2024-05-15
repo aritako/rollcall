@@ -27,6 +27,7 @@ const CreateClass: React.FC<AddClassProps> = (props) => {
       classEndTime: "",
       maxAbsences: 0,
     })
+    console.log(formData.classStartTime + ':00')
     console.log(formData)
     const handleChange = (event: any) => {
         setFormData((prevData) => {
@@ -38,18 +39,30 @@ const CreateClass: React.FC<AddClassProps> = (props) => {
     }
     async function createClass(event: any){
       event.preventDefault();
-      // const { error } = await supabase
-      //     .from('learners')
-      //     .insert({student_number: user?.user_metadata.student_number, class_id: enrollmentKey})
-      //     console.log(user?.user_metadata.student_number)
-      //     onFetchClasses()
 
-      //     if (error){
-      //       onSetAlertData({show: true, message: "You're already in this class!"})
-      //     } else{
-      //       onSetAlertData({show: true, message: "Successfully added class!"})
-      //     }
-      //     dismiss()
+      const { error } = await supabase
+          .from('sample_class')
+          .insert({
+            class_key: formData.classKey,
+            course_name: formData.className,
+            course_title: formData.classTitle,
+            professor_number: user?.user_metadata.student_number,
+            time_start: formData.classStartTime + ':00',
+            time_end: formData.classEndTime + ':00',
+            professor: user?.user_metadata.first_name + ' ' + user?.user_metadata.last_name,
+            year: formData.classYear,
+            semester: formData.classSemester,
+            max_absences: formData.maxAbsences
+          })
+      
+          if (error){
+            console.log(error)
+            onSetAlertData({show: true, message: "Can't add class!"})
+            
+          } else{
+            onSetAlertData({show: true, message: "Successfully added class!"})
+          }
+          dismiss()
     }
     return (
         <IonPage>
@@ -64,7 +77,7 @@ const CreateClass: React.FC<AddClassProps> = (props) => {
             </IonToolbar>
           </IonHeader>
           <IonContent className="ion-padding">
-            <form className = "create-form ion-margin-top">
+            <form onSubmit={createClass} className = "create-form ion-margin-top">
                 <IonInput required 
                 name = "classKey" 
                 type = "text" 
@@ -151,7 +164,7 @@ const CreateClass: React.FC<AddClassProps> = (props) => {
                 onIonInput = {handleChange} 
                 value = {formData.maxAbsences}
                 />
-              <IonButton disabled className = "test" type="submit">Enroll</IonButton>
+              <IonButton className = "test" type="submit">Enroll</IonButton>
             </form>
           </IonContent>
         </IonPage>

@@ -49,8 +49,8 @@ const View: React.FC<ViewProps> = (props) => {
         let viewName = 'enrollment_view';
         let idColumnName = 'student_number';
         if (user?.user_metadata?.user_type == 'professor') {  
-            viewName = 'teaching_view';
-            idColumnName = 'professor_id';
+            viewName = 'sample_class';
+            idColumnName = 'professor_number';
         }
 
         const { data, error } = await supabase

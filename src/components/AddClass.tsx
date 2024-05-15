@@ -19,12 +19,13 @@ const AddClass: React.FC<AddClassProps> = (props) => {
       event.preventDefault();
       const { error } = await supabase
           .from('learners')
-          .insert({student_number: user?.user_metadata.student_number, class_id: enrollmentKey})
+          .insert({student_number: user?.user_metadata.student_number, enrollment_key: enrollmentKey})
           console.log(user?.user_metadata.student_number)
           console.log(enrollmentKey)
           onFetchClasses()
 
           if (error){
+            console.log(error)
             onSetAlertData({show: true, message: "You're already in this class!"})
           } else{
             onSetAlertData({show: true, message: "Successfully added class!"})

@@ -5,11 +5,11 @@ import { Route, Redirect } from 'react-router';
 import View from './View';
 import Scan from './Scan';
 import Profile from './Profile';
-import ViewDetails from './ViewDetails';
+import ClassDetails from './ViewProfessorPath/ClassDetails';
 import { User } from '@supabase/supabase-js';
 import MarkAttendance from './MarkAttendance';
-import AttendancePage from './Attendance';
-import ClassPage from './ClassPage';
+import AttendancePage from './ViewStudentPath/AttendancePage';
+import ClassPage from './ViewProfessorPath/ClassPage';
 
 interface DashboardProps {
   user: User | null;
@@ -17,7 +17,7 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = (props) => {
   const {user} = props
     return (
-        <IonTabs>
+      <IonTabs>
         <IonTabBar slot="bottom">
           <IonTabButton tab="View" href="/app/dashboard/view">
             <IonIcon icon={triangle} />
@@ -34,13 +34,15 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
         </IonTabBar>
   
         <IonRouterOutlet>
-          <Route exact path="/app/dashboard/view" render={(props) => <View {...props} user={user} />} />
+          <Route exact path='/app/dashboard/view/:id/:date' 
+          render={(props) => <ClassDetails {...props} user={user} />} />
           <Route exact path='/app/dashboard/view/:id' 
           render={(props) => user?.user_metadata.user_type === "professor" ? 
             <ClassPage {...props} user={user} /> : 
             <AttendancePage {...props} user={user} />
           } 
           />
+          <Route exact path="/app/dashboard/view" render={(props) => <View {...props} user={user} />} />
           <Route exact path='/app/dashboard/attendance/:id' component={MarkAttendance} />
           <Route path="/app/dashboard/scan" render={(props) => <Scan {...props} user={user} />} />
           <Route path="/app/dashboard/profile" component={Profile} />

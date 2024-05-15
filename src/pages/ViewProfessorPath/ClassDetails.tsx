@@ -1,11 +1,12 @@
 import { IonBackButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, IonList, IonPage, IonSearchbar, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
-import supabase from '../config/supabaseClient';
-import AttendanceReport from '../components/AttendanceReport';
+import supabase from '../../config/supabaseClient';
+import AttendanceReport from '../../components/AttendanceReport';
 import { User } from '@supabase/supabase-js';
 interface DetailsPageProps extends RouteComponentProps<{
     id: string;
+    date: string;
 }> {
     user: User | null;
 }
@@ -16,7 +17,8 @@ interface Student {
     last_name: string;
 }
 
-const ViewDetails: React.FC<DetailsPageProps> = ({match, user}) => {
+const ClassDetails: React.FC<DetailsPageProps> = ({match, user}) => {
+    console.log("DETAILSSSSSSSSSSSSSSS")
     const [searchTerm, setSearchTerm] = useState('');
     const [students, setStudents] = useState<Student[]>([]);
     const [userType, setUserType] = useState<string>('');
@@ -32,7 +34,7 @@ const ViewDetails: React.FC<DetailsPageProps> = ({match, user}) => {
             }
         }
     }, [user]);
-    useIonViewWillEnter( () => {
+    useEffect( () => {
         const id = match.params.id;
         const fetchClasses = async () => {
             const { data, error } = await supabase
@@ -55,7 +57,8 @@ const ViewDetails: React.FC<DetailsPageProps> = ({match, user}) => {
     }
     return (
         <IonPage>
-            <IonHeader>
+            <IonContent>CLASS DETAILS PAGE {match.params.id} {match.params.date}</IonContent>
+            {/* <IonHeader>
                 <IonToolbar>
                     <IonButtons slot = "start">
                         <IonBackButton defaultHref = "/app/dashboard/view"></IonBackButton>
@@ -84,9 +87,9 @@ const ViewDetails: React.FC<DetailsPageProps> = ({match, user}) => {
                 <IonContent className="ion-padding">
                     <AttendanceReport class_id = {match.params.id} user = {user}/>
                 </IonContent>
-            }
+            } */}
         </IonPage>
     );
 };
 
-export default ViewDetails;
+export default ClassDetails;
