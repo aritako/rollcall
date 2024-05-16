@@ -119,7 +119,7 @@ const ClassPage: React.FC<DetailsPageProps> = ({match, user}) => {
                         {uniqueDays?.map((day: any) => {
                             const formattedDay = formatDate(day)
                             return(
-                            <IonItem key={day} routerLink = {`/app/dashboard/view/${userType}/${id}/${day.split("-").join("")}`}>
+                            <IonItem key={day} disabled routerLink = {`/app/dashboard/view/${userType}/${id}/${day.split("-").join("")}`}>
                                 <IonLabel>{formattedDay}</IonLabel>
                             </IonItem>
                             )
