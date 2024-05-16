@@ -82,7 +82,6 @@ const View: React.FC<ViewProps> = (props) => {
         event.detail.complete();
         }, 2000);
     }
-    console.log(courses)
     const handleChange = (event : any) => {
         setFormData((prevData) => {
             return {
@@ -106,23 +105,6 @@ const View: React.FC<ViewProps> = (props) => {
     
         validateClassIdFormat(value) !== null ? setIsClassIdValid(true) : setIsClassIdValid(false);
       };
-    async function addClass(event: any){
-        event.preventDefault();
-        // const { data: { user } } = await supabase.auth.getUser()
-        const { error } = await supabase
-            .from('learners')
-            .insert({student_number: user?.user_metadata.student_number, class_id: formData.class_id})
-            console.log(user?.user_metadata.student_number)
-            console.log(formData.class_id)
-            fetchClasses()
-
-            if (error){
-                setAlertData({show: true, message: "You're already in this class!"})
-            } else{
-                setAlertData({show: true, message: "Successfully added class!"})
-        }
-
-    }
     const [presentModalAdd, dismissModalAdd] = useIonModal(AddClass,{
         user: user,
         dismiss: () => dismissModalAdd(),

@@ -6,16 +6,6 @@ import { Route, RouteComponentProps } from 'react-router';
 import supabase from '../config/supabaseClient';
 import { waitFor } from '@testing-library/dom';
 
-type Class = {
-    id: number;
-    course_name: string;
-    course_title: string;
-    time_start: string;
-    time_end: string;
-    professor: string;
-    toggle?: boolean;
-};
-
 interface MarkAttendanceProps extends RouteComponentProps<{
     id: string;
 }> {}
@@ -24,7 +14,7 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
     const router = useIonRouter();
     const [presentAlert] = useIonAlert();
     const [validUser, setValidUser] = useState<boolean>(false);
-    const [classData, setClassData] = useState<Class>({
+    const [classData, setClassData] = useState<any>({
         id: -1,
         course_name: "",
         course_title: "",

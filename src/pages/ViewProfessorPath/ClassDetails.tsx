@@ -18,13 +18,14 @@ interface Student {
 }
 
 const ClassDetails: React.FC<DetailsPageProps> = ({match, user}) => {
-    console.log("DETAILSSSSSSSSSSSSSSS")
+    const {id} = match.params
     const [searchTerm, setSearchTerm] = useState('');
     const [students, setStudents] = useState<Student[]>([]);
     const [userType, setUserType] = useState<string>('');
     useEffect(() => {
         console.log('SEARCH', searchTerm)
     }, [searchTerm]);
+    
     useEffect(() => {
         if (user){
             if (user?.user_metadata?.user_type == 'professor') {
@@ -35,7 +36,6 @@ const ClassDetails: React.FC<DetailsPageProps> = ({match, user}) => {
         }
     }, [user]);
     useEffect( () => {
-        const id = match.params.id;
         const fetchClasses = async () => {
             const { data, error } = await supabase
             .from("enrollment_view")

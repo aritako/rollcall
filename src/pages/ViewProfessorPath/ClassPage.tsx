@@ -1,9 +1,9 @@
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, IonList, IonPage, IonSearchbar, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react';
+import { IonBackButton, IonButtons, IonContent, IonHeader, IonItem, IonLabel, IonList, IonPage, IonSearchbar, IonSegment, IonSegmentButton, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import supabase from '../../config/supabaseClient';
-import AttendanceReport from '../../components/AttendanceReport';
 import { User } from '@supabase/supabase-js';
+import "./ClassPage.css";
 interface DetailsPageProps extends RouteComponentProps<{
     id: string;
     date?: string;
@@ -26,8 +26,23 @@ const ClassPage: React.FC<DetailsPageProps> = ({match, user}) => {
     const {id} = match.params
     const [uniqueDays, setUniqueDays] = useState<string[]>([]);
     const [userType, setUserType] = useState<string>('');
+    const [displayType, setDisplayType] = useState<string>("class");
+    const [students, setStudents] = useState<any[]>([]);
     useEffect(() => {
-        const fetchClasses = async () => {
+        const fetchStudents = async () => {
+            const { data, error } = await supabase
+            .from("enrollment_view")
+            .select()
+            .match({id: id})
+    
+            if (error) {
+                console.log(error)
+            }
+            if (data){
+                setStudents(data)
+            }
+        }
+        const fetchDates = async () => {
             const { data, error } = await supabase
             .from("attendance")
             .select("timestamp")
@@ -42,8 +57,21 @@ const ClassPage: React.FC<DetailsPageProps> = ({match, user}) => {
                 setUniqueDays(uniqueDays)
             }
         }
-        fetchClasses();
+        fetchStudents();
+        fetchDates();
     },[]);
+    useEffect(() => {
+        if(user){
+            if (user?.user_metadata?.user_type == 'professor') {
+                setUserType('p')
+            } else {
+                setUserType('s')
+            }
+        }
+    }, [user]);
+    const handleDisplayChange = (e: CustomEvent) => {
+        setDisplayType(e.detail.value)
+    }
     return (
         <IonPage>
             <IonHeader>
@@ -54,18 +82,43 @@ const ClassPage: React.FC<DetailsPageProps> = ({match, user}) => {
                     <IonTitle>View</IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <IonContent className="ion-padding">
-                <h1 className="font-heavy"><center>Attendance Report</center></h1>
-                <IonList>
-                    {uniqueDays?.map((day: any) => {
-                        const formattedDay = formatDate(day)
-                        return(
-                        <IonItem key={day} routerLink = {`/app/dashboard/view/${id}/${day.split("-").join("")}`}>
-                            <IonLabel>{formattedDay}</IonLabel>
-                        </IonItem>
-                        )
-                    })}
-                </IonList>
+            <IonContent className="ion-padding classpage-content">
+                <div className = "classpage-title">
+                    <h1 className="font-heavy">Class Report</h1>
+                </div>
+                <IonSegment value= {displayType} onIonChange={handleDisplayChange}>
+                    <IonSegmentButton value="class">
+                    <IonLabel>Students</IonLabel>
+                    </IonSegmentButton>
+                    <IonSegmentButton value="date">
+                    <IonLabel>Date</IonLabel>
+                    </IonSegmentButton>
+                </IonSegment>
+                {displayType === "class" ?
+                <div className = "classpage-list">
+                    <IonList>
+                        {students?.map((student: any) => 
+                            <IonItem key={student.student_number}>
+                                <IonLabel>{student.last_name + ", " + student.first_name}</IonLabel>
+                            </IonItem>
+                            )
+                        } 
+                    </IonList>
+                </div>
+                :
+                <div className = "classpage-list">
+                    <IonList>
+                        {uniqueDays?.map((day: any) => {
+                            const formattedDay = formatDate(day)
+                            return(
+                            <IonItem key={day} routerLink = {`/app/dashboard/view/${userType}/${id}/${day.split("-").join("")}`}>
+                                <IonLabel>{formattedDay}</IonLabel>
+                            </IonItem>
+                            )
+                        })}
+                    </IonList>
+                </div>
+                }
             </IonContent>
         </IonPage>
     );

@@ -20,8 +20,8 @@ const AddClass: React.FC<AddClassProps> = (props) => {
       const { error } = await supabase
           .from('learners')
           .insert({student_number: user?.user_metadata.student_number, enrollment_key: enrollmentKey})
-          console.log(user?.user_metadata.student_number)
-          console.log(enrollmentKey)
+          // console.log(user?.user_metadata.student_number)
+          // console.log(enrollmentKey)
           onFetchClasses()
 
           if (error){
