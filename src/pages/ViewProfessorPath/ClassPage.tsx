@@ -23,6 +23,34 @@ const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString(undefined, options);
 };
 
+function convertUTCToPHT(utcDateString: string) : string{
+    // Create a new Date object from the UTC date string
+    const utcDate = new Date(utcDateString);
+  
+    // Check if the date is valid
+    if (isNaN(utcDate.getTime())) {
+      throw new Error('Invalid date format');
+    }
+  
+    // Convert to PHT by adding 8 hours
+    const offset = 8 * 60 * 60 * 1000; // 8 hours in milliseconds
+    const phtDate = new Date(utcDate.getTime() + offset);
+  
+    // Format the date to include milliseconds
+    const year = phtDate.getUTCFullYear();
+    const month = String(phtDate.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(phtDate.getUTCDate()).padStart(2, '0');
+    const hours = String(phtDate.getUTCHours()).padStart(2, '0');
+    const minutes = String(phtDate.getUTCMinutes()).padStart(2, '0');
+    const seconds = String(phtDate.getUTCSeconds()).padStart(2, '0');
+    const milliseconds = String(phtDate.getUTCMilliseconds()).padStart(3, '0');
+  
+    // Construct the formatted date string
+    const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+  
+    return formattedDate;
+}
+
 const ClassPage: React.FC<DetailsPageProps> = ({match, user}) => {
     const {id} = match.params
     const [uniqueDays, setUniqueDays] = useState<string[]>([]);
@@ -53,13 +81,13 @@ const ClassPage: React.FC<DetailsPageProps> = ({match, user}) => {
             console.log(error)
         }
         else{
-            const days = data.map(entry => entry.timestamp.split('T')[0])
+            const convertDays = data.map(entry => convertUTCToPHT(entry.timestamp))
+            const days = convertDays.map(entry => entry.split('T')[0])
             const uniqueDays = [...new Set(days)]
             setUniqueDays(uniqueDays)
             setLoading(false);
         }
     }
-
     useEffect(() => {
         if(user){
             if (user?.user_metadata?.user_type == 'professor') {
