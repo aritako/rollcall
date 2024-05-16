@@ -165,7 +165,7 @@ const RegisterForm: React.FC = () =>{
         <IonAlert
             isOpen={alertData.show}
             onDidDismiss={() => setAlertData({show: false, message: "", error: undefined})}
-            header={alertData.error !== undefined ? "Success" : "Error"}
+            header={alertData.error ? "Error" : "Success"}
             message={alertData.message}
             buttons={['OK']}
         />
