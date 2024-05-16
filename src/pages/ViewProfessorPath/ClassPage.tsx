@@ -4,6 +4,7 @@ import { RouteComponentProps } from 'react-router';
 import supabase from '../../config/supabaseClient';
 import { User } from '@supabase/supabase-js';
 import "./ClassPage.css";
+import ClassPageLoading from '../../components/loading/ClassPageLoading';
 interface DetailsPageProps extends RouteComponentProps<{
     id: string;
     date?: string;
@@ -28,38 +29,37 @@ const ClassPage: React.FC<DetailsPageProps> = ({match, user}) => {
     const [userType, setUserType] = useState<string>('');
     const [displayType, setDisplayType] = useState<string>("class");
     const [students, setStudents] = useState<any[]>([]);
-    useEffect(() => {
-        const fetchStudents = async () => {
-            const { data, error } = await supabase
-            .from("enrollment_view")
-            .select()
-            .match({id: id})
-    
-            if (error) {
-                console.log(error)
-            }
-            if (data){
-                setStudents(data)
-            }
+    const [loading, setLoading] = useState(true);
+    const fetchStudents = async () => {
+        const { data, error } = await supabase
+        .from("enrollment_view")
+        .select()
+        .match({id: id})
+
+        if (error) {
+            console.log(error)
         }
-        const fetchDates = async () => {
-            const { data, error } = await supabase
-            .from("attendance")
-            .select("timestamp")
-            .eq("class_id", id)
-    
-            if (error) {
-                console.log(error)
-            }
-            else{
-                const days = data.map(entry => entry.timestamp.split('T')[0])
-                const uniqueDays = [...new Set(days)]
-                setUniqueDays(uniqueDays)
-            }
+        if (data){
+            setStudents(data)
         }
-        fetchStudents();
-        fetchDates();
-    },[]);
+    }
+    const fetchDates = async () => {
+        const { data, error } = await supabase
+        .from("attendance")
+        .select("timestamp")
+        .eq("class_id", id)
+
+        if (error) {
+            console.log(error)
+        }
+        else{
+            const days = data.map(entry => entry.timestamp.split('T')[0])
+            const uniqueDays = [...new Set(days)]
+            setUniqueDays(uniqueDays)
+            setLoading(false);
+        }
+    }
+
     useEffect(() => {
         if(user){
             if (user?.user_metadata?.user_type == 'professor') {
@@ -67,6 +67,8 @@ const ClassPage: React.FC<DetailsPageProps> = ({match, user}) => {
             } else {
                 setUserType('s')
             }
+            fetchStudents();
+            fetchDates();
         }
     }, [user]);
     const handleDisplayChange = (e: CustomEvent) => {
@@ -82,6 +84,8 @@ const ClassPage: React.FC<DetailsPageProps> = ({match, user}) => {
                     <IonTitle>View</IonTitle>
                 </IonToolbar>
             </IonHeader>
+
+            {loading ? <ClassPageLoading /> : 
             <IonContent className="ion-padding classpage-content">
                 <div className = "classpage-title">
                     <h1 className="font-heavy">Class Report</h1>
@@ -96,6 +100,7 @@ const ClassPage: React.FC<DetailsPageProps> = ({match, user}) => {
                 </IonSegment>
                 {displayType === "class" ?
                 <div className = "classpage-list">
+                    {students.length > 0 ? 
                     <IonList>
                         {students?.map((student: any) => 
                             <IonItem key={student.student_number}>
@@ -103,10 +108,13 @@ const ClassPage: React.FC<DetailsPageProps> = ({match, user}) => {
                             </IonItem>
                             )
                         } 
-                    </IonList>
+                    </IonList> :
+                    <div className="ion-padding">No students enrolled in this class!</div>
+                    }
                 </div>
                 :
                 <div className = "classpage-list">
+                    {uniqueDays.length > 0 ? 
                     <IonList>
                         {uniqueDays?.map((day: any) => {
                             const formattedDay = formatDate(day)
@@ -116,10 +124,13 @@ const ClassPage: React.FC<DetailsPageProps> = ({match, user}) => {
                             </IonItem>
                             )
                         })}
-                    </IonList>
+                    </IonList> :
+                    <div className="ion-padding">No date recorded for this class! </div>
+                    }
                 </div>
                 }
             </IonContent>
+            }
         </IonPage>
     );
 };
