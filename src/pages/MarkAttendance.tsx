@@ -34,7 +34,7 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
         const { data: { user } } = await supabase.auth.getUser()
         const { error } = await supabase
             .from('attendance')
-            .insert({student_number: user?.user_metadata.student_number, class_id: classData.id, timestamp: (new Date()).toISOString()})
+            .insert({student_number: user?.user_metadata.student_number, class_id: classData.class_id, timestamp: (new Date()).toISOString()})
             if (error){
                 console.log(error)
                 console.log('oh no')
@@ -89,9 +89,9 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
         const id = match.params.id;
         const fetchCurrentClass = async () => {
             const {data, error} = await supabase
-            .from("sample_class")
+            .from("class_qr_view")
             .select()
-            .match({id: id});
+            .match({qr_id: id});
             if (error) {
                 console.log("ERROR:", error);
             }
