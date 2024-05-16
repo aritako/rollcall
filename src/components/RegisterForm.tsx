@@ -74,7 +74,6 @@ const RegisterForm: React.FC = () =>{
     };
     async function doSignUp(event: any){
         event.preventDefault();
-        console.log("OVER HERE", alertData)
         const { data, error } = await supabase.auth.signUp(
             {
                 email: formData.email,
