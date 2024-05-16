@@ -20,12 +20,19 @@ import CreateClass from '../components/CreateClass';
 
 type Class = {
     id: number;
+    class_key: string;
     course_name: string;
     course_title: string;
     time_start: string;
     time_end: string;
     professor: string;
+    professor_number: string;
+    semester: string;
+    year: string;
+    max_absences: number;
+    // CUSTOM
     toggle: boolean;
+    isProfessor?: boolean;
 };
 interface ViewProps {
     user: User | null;
@@ -75,7 +82,7 @@ const View: React.FC<ViewProps> = (props) => {
         event.detail.complete();
         }, 2000);
     }
-    
+    console.log(courses)
     const handleChange = (event : any) => {
         setFormData((prevData) => {
             return {
@@ -186,6 +193,7 @@ const View: React.FC<ViewProps> = (props) => {
                         key={item.id}
                         {...item}
                         toggle={true}
+                        isProfessor={metadata?.user_type === 'professor'}
                     />
                 ))}
                 

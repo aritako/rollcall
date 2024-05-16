@@ -34,14 +34,14 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
         </IonTabBar>
   
         <IonRouterOutlet>
-          <Route exact path='/app/dashboard/view/:id/:date' 
+          <Route exact path='/app/dashboard/view/p/:id/:date' 
           render={(props) => <ClassDetails {...props} user={user} />} />
-          <Route exact path='/app/dashboard/view/:id' 
-          render={(props) => user?.user_metadata.user_type === "professor" ? 
-            <ClassPage {...props} user={user} /> : 
-            <AttendancePage {...props} user={user} />
-          } 
-          />
+          <Route exact path='/app/dashboard/view/p/:id' render = {
+            (props) => <ClassPage {...props} user={user} />
+          }/>
+          <Route exact path='/app/dashboard/view/s/:id' render = {
+            (props) => <AttendancePage {...props} user={user} />
+          }/>
           <Route exact path="/app/dashboard/view" render={(props) => <View {...props} user={user} />} />
           <Route exact path='/app/dashboard/attendance/:id' component={MarkAttendance} />
           <Route path="/app/dashboard/scan" render={(props) => <Scan {...props} user={user} />} />

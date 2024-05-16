@@ -1,4 +1,4 @@
-import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonLabel, IonPage, IonRow, IonTitle, IonToolbar, useIonRouter } from '@ionic/react';
+import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonChip, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonLabel, IonPage, IonRow, IonTitle, IonToolbar, useIonRouter } from '@ionic/react';
 import React from 'react';
 import './ClassCard.css';
 import { ellipse } from 'ionicons/icons';
@@ -13,26 +13,37 @@ function toStandardTime(militaryTime: string): string {
 
 interface ClassCardProps {
     id: number;
-    course_name?: string;
-    course_title?: string;
-    time_start?: string;
-    time_end?: string;
-    professor?: string;
-    toggle?: boolean;
+    class_key: string;
+    course_name: string;
+    course_title: string;
+    time_start: string;
+    time_end: string;
+    professor: string;
+    professor_number: string;
+    semester: string;
+    year: string;
+    max_absences: number;
+    // CUSTOM
+    toggle: boolean;
+    isProfessor?: boolean;
 }
 
 const ClassCard: React.FC<ClassCardProps> = (props) : JSX.Element => {
     return (
-        <IonCard className = "main-card card-class round-border" routerLink={props.toggle ? `/app/dashboard/view/${props.id}`: undefined}>
+        <IonCard className = "main-card card-class round-border" routerLink={props.toggle ? `/app/dashboard/view/${props.isProfessor ? "p" : "s"}/${props.id}`: undefined}>
             <div className = "card-class-info">
                 <img src = "https://picsum.photos/50" className = "round-border card-class-icon"/>
-                <IonCardHeader>
+                <IonCardHeader className = "header-container">
                     <div className = "card-class-header">
-                        <IonCardTitle data-testid = {`class-card-${props.course_name}`}>{props.course_name}</IonCardTitle>
+                        <IonCardTitle className = "title-coursetitle" data-testid = {`class-card-${props.course_title}`}>{props.course_title}</IonCardTitle>
                         <IonCardContent>{props.time_start && toStandardTime(props.time_start)}</IonCardContent>
                     </div>
-                    <IonCardSubtitle>{props.course_title}</IonCardSubtitle>
-                    {props.professor && <IonCardSubtitle>{`Prof. ${props.professor}`}</IonCardSubtitle>}
+                    <IonCardSubtitle className = "subtitle-coursename">{props.course_name}</IonCardSubtitle>
+                    {!props.isProfessor && <IonCardSubtitle className = "prof-subtitle">{`Prof. ${props.professor}`}</IonCardSubtitle>}
+                    <div className = "chip-div">
+                        <IonChip color = "medium">{props.year}</IonChip>
+                        <IonChip color = "medium">{props.semester}</IonChip>
+                    </div>
                 </IonCardHeader>
             </div>
         </IonCard>

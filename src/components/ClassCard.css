@@ -22,22 +22,51 @@
     display:flex;
     align-items: baseline;
     justify-content: space-between;
-    width: auto;
+    width: 100%;
 }
 
 .card-class-header > ion-card-content{
     margin: 0;
     padding: 0;
+    white-space: nowrap;
 }
 
 .card-class-highlight{
     background-color: black;
 }
 
-/* .main-card{
-    width: 100%;
-} */
-
 ion-card.main-card:hover{
     cursor: pointer;
+}
+
+.header-container{
+    display:flex;
+    gap: 1px;
+}
+
+.chip-div {
+    display: flex;
+    gap: 3px;
+}
+
+.chip-div ion-chip{
+    margin:0;
+    font-size: 0.85em;
+}
+
+@media screen and (max-width: 640px){
+    .title-coursetitle{
+        font-size: 1.25em;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .subtitle-coursename{
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .card-class-icon, .prof-subtitle {
+        display:none;
+    }
 }
