@@ -11,7 +11,7 @@ const RegisterForm: React.FC = () =>{
     const [alertData, setAlertData] = useState({
         show: false,
         message: "",
-        error: undefined as string | undefined
+        error: false
     })
     const [formData, setFormData] = useState({
         user_type: "",
@@ -74,6 +74,7 @@ const RegisterForm: React.FC = () =>{
     };
     async function doSignUp(event: any){
         event.preventDefault();
+        console.log("OVER HERE", alertData)
         const { data, error } = await supabase.auth.signUp(
             {
                 email: formData.email,
@@ -90,18 +91,18 @@ const RegisterForm: React.FC = () =>{
             }
             )
             if (error) {
-                setAlertData({show: true, message: error.message, error: error.code})
+                setAlertData({show: true, message: error.message, error: true})
             } else {
                 setAlertData({
                     show: true, 
                     message: "Please check your email for the verification link.",
-                    error: undefined
+                    error: false
                 })
                 // IMPORTANT NOTE: Remove this when implementing signup with email verification!
                 await supabase.auth.signOut();
                 router.push('/login');
         }
-
+        
     }
     // console.log(formData)
     return(
@@ -164,7 +165,7 @@ const RegisterForm: React.FC = () =>{
         </IonGrid>
         <IonAlert
             isOpen={alertData.show}
-            onDidDismiss={() => setAlertData({show: false, message: "", error: undefined})}
+            onDidDismiss={() => setAlertData({show: false, message: "", error: false})}
             header={alertData.error ? "Error" : "Success"}
             message={alertData.message}
             buttons={['OK']}
