@@ -5,11 +5,12 @@ import { Route, Redirect } from 'react-router';
 import View from './View';
 import Scan from './Scan';
 import Profile from './Profile';
-import ClassDetails from './ViewProfessorPath/ClassDetails';
+import ClassDetails from './ViewProfessorPath/ClassDetailsDate';
 import { User } from '@supabase/supabase-js';
 import MarkAttendance from './MarkAttendance';
 import AttendancePage from './ViewStudentPath/AttendancePage';
 import ClassPage from './ViewProfessorPath/ClassPage';
+import ClassDetailsAttendance from './ViewProfessorPath/ClassDetailsAttendance';
 
 interface DashboardProps {
   user: User | null;
@@ -34,11 +35,15 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
         </IonTabBar>
   
         <IonRouterOutlet>
+          {/* PROFESSOR ROUTES */}
+          <Route exact path='/app/dashboard/view/p/:id/s/:sid' 
+          render={(props) => <ClassDetailsAttendance {...props} user={user} />} />
           <Route exact path='/app/dashboard/view/p/:id/:date' 
           render={(props) => <ClassDetails {...props} user={user} />} />
           <Route exact path='/app/dashboard/view/p/:id' render = {
             (props) => <ClassPage {...props} user={user} />
           }/>
+          {/* STUDENTS ROUTES*/}
           <Route exact path='/app/dashboard/view/s/:id' render = {
             (props) => <AttendancePage {...props} user={user} />
           }/>

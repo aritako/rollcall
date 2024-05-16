@@ -103,7 +103,7 @@ const ClassPage: React.FC<DetailsPageProps> = ({match, user}) => {
                     {students.length > 0 ? 
                     <IonList>
                         {students?.map((student: any) => 
-                            <IonItem key={student.student_number}>
+                            <IonItem key={student.student_number} routerLink = {`/app/dashboard/view/p/${id}/s/${student.student_number}`}>
                                 <IonLabel>{student.last_name + ", " + student.first_name}</IonLabel>
                             </IonItem>
                             )

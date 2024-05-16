@@ -8,6 +8,7 @@ import { time } from 'console';
 
 interface AttendanceReportProps{
     class_id: string;
+    student_id?: string;
     user: User | null;
 }
 
@@ -33,16 +34,20 @@ function parseISOString(dateString: string): DateComponents {
     };
 }
 
-const AttendanceReport: React.FC<AttendanceReportProps> = ({class_id, user}) => {
+const AttendanceReport: React.FC<AttendanceReportProps> = ({class_id, student_id, user}) => {
     const [attendanceData, setAttendanceData] = useState<any>([]);
     const [timeData, setTimeData] = useState<DateComponents[]>([]);
     useEffect(() => {
         const fetchAttendance = async () => {
+            let student_number = user?.user_metadata.student_number;
+            if (student_id){
+                student_number = student_id;
+            }
             const { data, error } = await supabase
             .from('attendance')
             .select()
             .eq("class_id", class_id)
-            .eq("student_number", user?.user_metadata.student_number)
+            .eq("student_number", student_number)
 
             if (error){
                 console.log(error)
