@@ -68,7 +68,7 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
             .eq('student_number', user?.user_metadata?.student_number)
             .eq('id', id)
         console.log(data)
-        if (data?.length == 0){
+        if (data == null){
             presentAlert({
                 header: 'Error',
                 message: 'Not enrolled in this class!',

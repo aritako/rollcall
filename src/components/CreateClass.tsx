@@ -60,7 +60,7 @@ const CreateClass: React.FC<AddClassProps> = (props) => {
             onSetAlertData({show: true, message: "Can't add class!"})
             
           } else{
-            onSetAlertData({show: true, message: "Successfully added class!"})
+            onSetAlertData({show: true, message: "Successfully created class!"})
           }
           dismiss()
     }
