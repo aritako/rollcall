@@ -115,7 +115,14 @@ const Tab2: React.FC<ViewProps> = ({user}) => {
                 <IonButtons slot = "start">
                     <IonMenuButton/>
                 </IonButtons>
-                <IonTitle>Scan QR Code</IonTitle>
+                {metadata?.user_type === "student" &&
+                    <IonTitle>
+                        Scan QR Code
+                    </IonTitle>}
+                {metadata?.user_type === "professor" &&
+                    <IonTitle>
+                        Generate QR Code
+                    </IonTitle>}
             </IonToolbar>
         </IonHeader>
         <IonContent className="ion-padding hide-on-scanner-active">
