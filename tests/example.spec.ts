@@ -126,10 +126,22 @@ test('Student attempts to enroll in already enrolled class', async ({ page }) =>
 });
 
 test('Student clicks a class', async ({ page }) => {
-  await page.goto('/');
-  successLogin(page);
-  await page.getByText('How to8:30 PMHi helloProf.').click();
-  await expect(page.getByRole('heading', { name: 'Attendance Report' })).toBeVisible();
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Next' }).first().click();
+    await page.getByRole('button', { name: 'Next' }).nth(1).click();
+    await page.getByRole('button', { name: 'Finish' }).click();
+    await page.getByLabel('UP EmailUP Email').click();
+    await page.getByLabel('UP EmailUP Email').fill('t@up.edu.ph');
+    await page.getByLabel('PasswordPassword').click();
+    await page.getByLabel('PasswordPassword').fill('testpassword');
+    await page.getByRole('button', { name: 'Login' }).click();
+    await page.getByRole('button', { name: 'Add Class' }).click();
+    await page.getByLabel('Enrollment KeyEnrollment Key').click();
+    await page.getByLabel('Enrollment KeyEnrollment Key').fill('12345');
+    await page.getByRole('button', { name: 'Enroll' }).click();
+    await page.getByRole('button', { name: 'OK' }).click();
+    await page.getByText('CS 3001:00 PM').click();
+    await expect(page.getByRole('heading', { name: 'Attendance Report' })).toBeVisible();
 });
 
 test('Professor logs in account', async ({ page }) => {
@@ -153,7 +165,21 @@ test('Professor clicks a class', async ({ page }) => {
   await page.getByLabel('PasswordPassword').click();
   await page.getByLabel('PasswordPassword').fill('testpassword');
   await page.getByRole('button', { name: 'Login' }).click();  
-  await page.getByText('Web Development Frameworks1:00 PMIntro to IonicProf. William Proffie').click();
+  await page.getByText('CS 12312:00 PMSample').click();
+  await expect(page.getByRole('heading', { name: 'Class Report' })).toBeVisible();
+});
+
+test('Professor clicks a student', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Next' }).first().click();
+  await page.getByRole('button', { name: 'Next' }).nth(1).click();
+  await page.getByRole('button', { name: 'Finish' }).click();
+  await page.getByLabel('UP EmailUP Email').fill('professor@gmail.com');
+  await page.getByLabel('PasswordPassword').click();
+  await page.getByLabel('PasswordPassword').fill('testpassword');
+  await page.getByRole('button', { name: 'Login' }).click();  
+  await page.getByText('CS 3001:00 PMIntro to').click();
+  await page.getByText('Gojo, Satoru').click();
   await expect(page.getByRole('heading', { name: 'Attendance Report' })).toBeVisible();
 });
 
@@ -168,13 +194,13 @@ test('Professor generates QR', async ({ page }) => {
   await page.getByRole('button', { name: 'Login' }).click();  
   await page.getByText('Generate').click();
   await page.locator('div').filter({ hasText: /^Select class$/ }).first().click();
-  await page.getByRole('radio', { name: 'Web Development Frameworks' }).click();
+  await page.getByRole('radio', { name: 'Math 100 WFX' }).click();
   await page.getByRole('button', { name: 'OK' }).click();
   await page.getByRole('button', { name: 'Generate QR Code' }).click();
   await expect(page.getByRole('img', { name: 'QR Code' })).toBeVisible();
 });
 
-/*
+
 test('Professor creates a class', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Next' }).first().click();
@@ -201,7 +227,9 @@ test('Professor creates a class', async ({ page }) => {
   await page.getByLabel('Max No. of AbsencesMax No. of').click();
   await page.getByLabel('Max No. of AbsencesMax No. of').fill('7');
   await page.getByRole('button', { name: 'Enroll' }).click();
-  await expect(page.getByText('Successfully added class!')).toBeVisible();
+  await page.getByRole('button', { name: 'OK' }).click();
+  await expect(page.getByText('class211:30 PMclass22023-')).toBeVisible();
+
 
 
 });
