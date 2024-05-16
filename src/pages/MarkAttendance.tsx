@@ -66,8 +66,8 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
             .from('qr_codes')
             .select('class_id')
             .eq('qr_id', qrurl)
-        console.log(qrdata)
-        if (qrerror){
+        console.log("QR", qrdata)
+        if (qrerror || qrdata?.length == 0){
             presentAlert({
                 header: 'Error',
                 message: "Invalid Code!",
@@ -112,7 +112,7 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
                     }
                 }],
               })
-        } 
+        }
         else {
             setValidUser(true)
         }
