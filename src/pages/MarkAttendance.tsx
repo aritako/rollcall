@@ -68,7 +68,20 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
             .eq('student_number', user?.user_metadata?.student_number)
             .eq('id', id)
         console.log(data)
-        if (data == null){
+        if (user?.user_metadata.user_type == 'professor'){
+            presentAlert({
+                header: 'Error',
+                message: "Professor can't mark attendance!",
+                backdropDismiss: false,
+                buttons: [{
+                    text: 'OK',
+                    handler: () => {
+                        router.push("/app/dashboard/view", 'forward', 'replace');
+                    }
+                }],
+              })
+        }
+        else if (data == null){
             presentAlert({
                 header: 'Error',
                 message: 'Not enrolled in this class!',
@@ -80,7 +93,8 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
                     }
                 }],
               })
-        } else {
+        } 
+        else {
             setValidUser(true)
         }
     }
