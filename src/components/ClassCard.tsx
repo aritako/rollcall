@@ -35,11 +35,11 @@ const ClassCard: React.FC<ClassCardProps> = (props) : JSX.Element => {
                 <img src = "https://picsum.photos/50" className = "round-border card-class-icon"/>
                 <IonCardHeader className = "header-container">
                     <div className = "card-class-header">
-                        <IonCardTitle className = "title-text" data-testid = {`class-card-${props.course_name}`}>{props.course_name}</IonCardTitle>
+                        <IonCardTitle className = "title-coursetitle" data-testid = {`class-card-${props.course_title}`}>{props.course_title}</IonCardTitle>
                         <IonCardContent>{props.time_start && toStandardTime(props.time_start)}</IonCardContent>
                     </div>
-                    <IonCardSubtitle>{props.course_title}</IonCardSubtitle>
-                    {!props.isProfessor && <IonCardSubtitle>{`Prof. ${props.professor}`}</IonCardSubtitle>}
+                    <IonCardSubtitle className = "subtitle-coursename">{props.course_name}</IonCardSubtitle>
+                    {!props.isProfessor && <IonCardSubtitle className = "prof-subtitle">{`Prof. ${props.professor}`}</IonCardSubtitle>}
                     <div className = "chip-div">
                         <IonChip color = "medium">{props.year}</IonChip>
                         <IonChip color = "medium">{props.semester}</IonChip>

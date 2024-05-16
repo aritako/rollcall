@@ -55,10 +55,18 @@ ion-card.main-card:hover{
 }
 
 @media screen and (max-width: 640px){
-    .title-text{
+    .title-coursetitle{
         font-size: 1.25em;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
-    .card-class-icon {
+    .subtitle-coursename{
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .card-class-icon, .prof-subtitle {
         display:none;
     }
 }
