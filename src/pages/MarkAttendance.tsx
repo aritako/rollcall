@@ -60,13 +60,13 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
 
     const checkClasses = async () => {
         const { data: { user } } = await supabase.auth.getUser()
-        console.log('checking')
+        // console.log('checking')
         var qrurl = router.routeInfo.pathname.replace('/app/dashboard/attendance/', '')
         const { data: qrdata, error : qrerror } = await supabase
             .from('qr_codes')
             .select('class_id')
             .eq('qr_id', qrurl)
-        console.log("QR", qrdata)
+        // console.log("QR", qrdata)
         if (qrerror || qrdata?.length == 0){
             presentAlert({
                 header: 'Error',
@@ -85,7 +85,6 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
                 .select()
                 .eq('student_number', user?.user_metadata?.student_number)
                 .eq('id', qrdata?.[0].class_id)
-            console.log(enrollmentdata)
             if (user?.user_metadata.user_type == 'professor'){
                 presentAlert({
                     header: 'Error',
@@ -100,7 +99,6 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
                 })
             }
             else if (enrollmentdata?.length == 0){
-                console.log(enrollmenterror)
                 presentAlert({
                     header: 'Error',
                     message: 'Not enrolled in this class!',
@@ -139,7 +137,7 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
         fetchCurrentClass();
         checkClasses();
     },[]);
-    console.log(validUser)
+    // console.log(validUser)
     return (
         <IonPage>
             <IonHeader>
