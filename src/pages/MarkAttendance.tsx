@@ -61,13 +61,31 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
     const checkClasses = async () => {
         const { data: { user } } = await supabase.auth.getUser()
         console.log('checking')
-        var id = router.routeInfo.pathname.replace('/app/dashboard/attendance/', '')
-        const { data, error } = await supabase
+        var qrurl = router.routeInfo.pathname.replace('/app/dashboard/attendance/', '')
+        const { data: qrdata, error : qrerror } = await supabase
+            .from('qr_codes')
+            .select('class_id')
+            .eq('qr_id', qrurl)
+        console.log(qrdata)
+        if (qrerror){
+            presentAlert({
+                header: 'Error',
+                message: "Invalid Code!",
+                backdropDismiss: false,
+                buttons: [{
+                    text: 'OK',
+                    handler: () => {
+                        router.push("/app/dashboard/view", 'forward', 'replace');
+                    }
+                }],
+              })
+        }
+        const { data: enrollmentdata, error : enrollmenterror } = await supabase
             .from('enrollment_view')
             .select()
             .eq('student_number', user?.user_metadata?.student_number)
-            .eq('id', id)
-        console.log(data)
+            .eq('id', qrdata?.[0].class_id)
+        console.log(enrollmentdata)
         if (user?.user_metadata.user_type == 'professor'){
             presentAlert({
                 header: 'Error',
@@ -81,7 +99,8 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
                 }],
               })
         }
-        else if (data == null){
+        else if (enrollmentdata?.length == 0){
+            console.log(enrollmenterror)
             presentAlert({
                 header: 'Error',
                 message: 'Not enrolled in this class!',
