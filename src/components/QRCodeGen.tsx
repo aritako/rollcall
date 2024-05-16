@@ -15,9 +15,9 @@ const QRCodeGen: React.FC = () => {
   async function getClasses() {
     const { data: { user } } = await supabase.auth.getUser()
     const { data, error } = await supabase
-      .from('teaching_view')
+      .from('sample_class')
       .select()
-      .eq('professor_id', user?.user_metadata?.student_number);
+      .eq('professor_number', user?.user_metadata?.student_number);
     if (error) {
       console.error('Error fetching data:', error);
     } else {
