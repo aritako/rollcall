@@ -79,42 +79,43 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
                     }
                 }],
               })
-        }
-        const { data: enrollmentdata, error : enrollmenterror } = await supabase
-            .from('enrollment_view')
-            .select()
-            .eq('student_number', user?.user_metadata?.student_number)
-            .eq('id', qrdata?.[0].class_id)
-        console.log(enrollmentdata)
-        if (user?.user_metadata.user_type == 'professor'){
-            presentAlert({
-                header: 'Error',
-                message: "Professor can't mark attendance!",
-                backdropDismiss: false,
-                buttons: [{
-                    text: 'OK',
-                    handler: () => {
-                        router.push("/app/dashboard/view", 'forward', 'replace');
-                    }
-                }],
-              })
-        }
-        else if (enrollmentdata?.length == 0){
-            console.log(enrollmenterror)
-            presentAlert({
-                header: 'Error',
-                message: 'Not enrolled in this class!',
-                backdropDismiss: false,
-                buttons: [{
-                    text: 'OK',
-                    handler: () => {
-                        router.push("/app/dashboard/view", 'forward', 'replace');
-                    }
-                }],
-              })
-        }
-        else {
-            setValidUser(true)
+        } else {
+            const { data: enrollmentdata, error : enrollmenterror } = await supabase
+                .from('enrollment_view')
+                .select()
+                .eq('student_number', user?.user_metadata?.student_number)
+                .eq('id', qrdata?.[0].class_id)
+            console.log(enrollmentdata)
+            if (user?.user_metadata.user_type == 'professor'){
+                presentAlert({
+                    header: 'Error',
+                    message: "Professor can't mark attendance!",
+                    backdropDismiss: false,
+                    buttons: [{
+                        text: 'OK',
+                        handler: () => {
+                            router.push("/app/dashboard/view", 'forward', 'replace');
+                        }
+                    }],
+                })
+            }
+            else if (enrollmentdata?.length == 0){
+                console.log(enrollmenterror)
+                presentAlert({
+                    header: 'Error',
+                    message: 'Not enrolled in this class!',
+                    backdropDismiss: false,
+                    buttons: [{
+                        text: 'OK',
+                        handler: () => {
+                            router.push("/app/dashboard/view", 'forward', 'replace');
+                        }
+                    }],
+                })
+            }
+            else {
+                setValidUser(true)
+            }
         }
     }
 
@@ -138,7 +139,7 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
         fetchCurrentClass();
         checkClasses();
     },[]);
-
+    console.log(validUser)
     return (
         <IonPage>
             <IonHeader>
