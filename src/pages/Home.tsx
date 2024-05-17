@@ -1,5 +1,4 @@
 import { IonContent, IonHeader, IonIcon, IonItem, IonMenu, IonMenuToggle, IonPage, IonRouterOutlet, IonSplitPane, IonTitle, IonToolbar, useIonRouter } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
 import { Redirect, Route } from 'react-router';
 import Dashboard from './Dashboard';
 import Settings from './Settings';
@@ -8,7 +7,6 @@ import './Home.css';
 import supabase from '../config/supabaseClient';
 import { useState, useEffect } from 'react';
 import { User } from '@supabase/supabase-js';
-import ViewDetails from './ViewDetails';
 
 
 const Home: React.FC = () => {

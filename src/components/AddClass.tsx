@@ -19,12 +19,13 @@ const AddClass: React.FC<AddClassProps> = (props) => {
       event.preventDefault();
       const { error } = await supabase
           .from('learners')
-          .insert({student_number: user?.user_metadata.student_number, class_id: enrollmentKey})
-          console.log(user?.user_metadata.student_number)
-          console.log(enrollmentKey)
+          .insert({student_number: user?.user_metadata.student_number, enrollment_key: enrollmentKey})
+          // console.log(user?.user_metadata.student_number)
+          // console.log(enrollmentKey)
           onFetchClasses()
 
           if (error){
+            console.log(error)
             onSetAlertData({show: true, message: "You're already in this class!"})
           } else{
             onSetAlertData({show: true, message: "Successfully added class!"})
@@ -35,21 +36,16 @@ const AddClass: React.FC<AddClassProps> = (props) => {
         <IonPage>
           <IonHeader>
             <IonToolbar>
-            <IonButtons slot="start">
-              <IonButton color="medium" onClick={() => dismiss()}>
-                Cancel
-              </IonButton>
-            </IonButtons>
-            
-            <IonButtons slot="end">
-              <IonButton onClick={() => dismiss()} strong={true}>
-                Confirm
-            </IonButton>
-          </IonButtons>
+              <IonTitle>Add Class</IonTitle>
+              <IonButtons slot="end">
+                <IonButton color="medium" onClick={() => dismiss()}>
+                  Cancel
+                </IonButton>
+              </IonButtons>
             </IonToolbar>
           </IonHeader>
           <IonContent className="ion-padding">
-            <form onSubmit={addClass}>
+            <form onSubmit={addClass} className = "enroll-form">
               <IonInput required 
                 name = "enrollmentKey" 
                 type = "text" 

@@ -126,10 +126,22 @@ test('Student attempts to enroll in already enrolled class', async ({ page }) =>
 });
 
 test('Student clicks a class', async ({ page }) => {
-  await page.goto('/');
-  successLogin(page);
-  await page.getByText('CS 1927:30 AMSoftware').click();
-  await expect(page).toHaveURL('../app/dashboard/view/1');
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Next' }).first().click();
+    await page.getByRole('button', { name: 'Next' }).nth(1).click();
+    await page.getByRole('button', { name: 'Finish' }).click();
+    await page.getByLabel('UP EmailUP Email').click();
+    await page.getByLabel('UP EmailUP Email').fill('t@up.edu.ph');
+    await page.getByLabel('PasswordPassword').click();
+    await page.getByLabel('PasswordPassword').fill('testpassword');
+    await page.getByRole('button', { name: 'Login' }).click();
+    await page.getByRole('button', { name: 'Add Class' }).click();
+    await page.getByLabel('Enrollment KeyEnrollment Key').click();
+    await page.getByLabel('Enrollment KeyEnrollment Key').fill('12345');
+    await page.getByRole('button', { name: 'Enroll' }).click();
+    await page.getByRole('button', { name: 'OK' }).click();
+    await page.getByText('CS 3001:00 PM').click();
+    await expect(page.getByRole('heading', { name: 'Attendance Report' })).toBeVisible();
 });
 
 test('Professor logs in account', async ({ page }) => {
@@ -153,8 +165,22 @@ test('Professor clicks a class', async ({ page }) => {
   await page.getByLabel('PasswordPassword').click();
   await page.getByLabel('PasswordPassword').fill('testpassword');
   await page.getByRole('button', { name: 'Login' }).click();  
-  await page.getByText('CS 1927:30 AMSoftware').click();
-  await expect(page.getByRole('heading', { name: 'Class List' })).toBeVisible();
+  await page.getByText('CS 12312:00 PMSample').click();
+  await expect(page.getByRole('heading', { name: 'Class Report' })).toBeVisible();
+});
+
+test('Professor clicks a student', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Next' }).first().click();
+  await page.getByRole('button', { name: 'Next' }).nth(1).click();
+  await page.getByRole('button', { name: 'Finish' }).click();
+  await page.getByLabel('UP EmailUP Email').fill('professor@gmail.com');
+  await page.getByLabel('PasswordPassword').click();
+  await page.getByLabel('PasswordPassword').fill('testpassword');
+  await page.getByRole('button', { name: 'Login' }).click();  
+  await page.getByText('CS 3001:00 PMIntro to').click();
+  await page.getByText('Gojo, Satoru').click();
+  await expect(page.getByRole('heading', { name: 'Attendance Report' })).toBeVisible();
 });
 
 test('Professor generates QR', async ({ page }) => {
@@ -168,12 +194,89 @@ test('Professor generates QR', async ({ page }) => {
   await page.getByRole('button', { name: 'Login' }).click();  
   await page.getByText('Generate').click();
   await page.locator('div').filter({ hasText: /^Select class$/ }).first().click();
-  await page.getByRole('radio', { name: 'Math' }).click();
+  await page.getByRole('radio', { name: 'Math 100 WFX' }).click();
   await page.getByRole('button', { name: 'OK' }).click();
   await page.getByRole('button', { name: 'Generate QR Code' }).click();
   await expect(page.getByRole('img', { name: 'QR Code' })).toBeVisible();
 });
 
+test('Professor views active QR', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Next' }).first().click();
+  await page.getByRole('button', { name: 'Next' }).nth(1).click();
+  await page.getByRole('button', { name: 'Finish' }).click();
+  await page.getByLabel('UP EmailUP Email').fill('professor@gmail.com');
+  await page.getByLabel('PasswordPassword').click();
+  await page.getByLabel('PasswordPassword').fill('testpassword');
+  await page.getByRole('button', { name: 'Login' }).click();  
+  await page.getByText('Generate').click();
+  await page.locator('div').filter({ hasText: /^Select class$/ }).first().click();
+  await page.getByRole('radio', { name: 'Math 100 WFX' }).click();
+  await page.getByRole('button', { name: 'OK' }).click();
+  await page.getByRole('button', { name: 'View QR Code' }).click();
+  await expect(page.getByRole('img', { name: 'QR Code' })).toBeVisible();
+});
+
+
+test('Professor creates a class', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Next' }).first().click();
+  await page.getByRole('button', { name: 'Next' }).nth(1).click();
+  await page.getByRole('button', { name: 'Finish' }).click();
+  await page.getByLabel('UP EmailUP Email').fill('professor@gmail.com');
+  await page.getByLabel('PasswordPassword').click();
+  await page.getByLabel('PasswordPassword').fill('testpassword');
+  await page.getByRole('button', { name: 'Login' }).click();  
+  await page.getByRole('button', { name: 'Create Class' }).click();
+  await page.getByLabel('Class Enrollment KeyClass').fill('class2');
+  await page.getByLabel('Class NameClass Name').click();
+  await page.getByLabel('Class NameClass Name').fill('class2');
+  await page.getByLabel('Class TitleClass Title').click();
+  await page.getByLabel('Class TitleClass Title').fill('class2');
+  await page.getByText('Select a Semester').click();
+  await page.getByRole('button', { name: '2nd Semester' }).click();
+  await page.getByLabel('Academic YearAcademic Year').click();
+  await page.getByLabel('Academic YearAcademic Year').fill('2023-2024');
+  await page.getByLabel('Start TimeStart Time').click();
+  await page.getByLabel('Start TimeStart Time').fill('23:30');
+  await page.getByLabel('End TimeEnd Time').click();
+  await page.getByLabel('End TimeEnd Time').fill('12:30');
+  await page.getByLabel('Max No. of AbsencesMax No. of').click();
+  await page.getByLabel('Max No. of AbsencesMax No. of').fill('7');
+  await page.getByRole('button', { name: 'Enroll' }).click();
+  await page.getByRole('button', { name: 'OK' }).click();
+  await expect(page.getByText('class211:30 PMclass22023-')).toBeVisible();
+
+});
+
+test('Professor makes an a class with already exisiting class key', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Next' }).first().click();
+  await page.getByRole('button', { name: 'Next' }).nth(1).click();
+  await page.getByRole('button', { name: 'Finish' }).click();
+  await page.getByLabel('UP EmailUP Email').fill('professor@gmail.com');
+  await page.getByLabel('PasswordPassword').click();
+  await page.getByLabel('PasswordPassword').fill('testpassword');
+  await page.getByRole('button', { name: 'Login' }).click();  
+  await page.getByRole('button', { name: 'Create Class' }).click();
+  await page.getByLabel('Class Enrollment KeyClass').fill('class2');
+  await page.getByLabel('Class NameClass Name').click();
+  await page.getByLabel('Class NameClass Name').fill('class2');
+  await page.getByLabel('Class TitleClass Title').click();
+  await page.getByLabel('Class TitleClass Title').fill('class2');
+  await page.getByText('Select a Semester').click();
+  await page.getByRole('button', { name: '2nd Semester' }).click();
+  await page.getByLabel('Academic YearAcademic Year').click();
+  await page.getByLabel('Academic YearAcademic Year').fill('2023-2024');
+  await page.getByLabel('Start TimeStart Time').click();
+  await page.getByLabel('Start TimeStart Time').fill('23:30');
+  await page.getByLabel('End TimeEnd Time').click();
+  await page.getByLabel('End TimeEnd Time').fill('12:30');
+  await page.getByLabel('Max No. of AbsencesMax No. of').click();
+  await page.getByLabel('Max No. of AbsencesMax No. of').fill('7');
+  await page.getByRole('button', { name: 'Enroll' }).click();
+  await expect(page.getByText('Can\'t add class!')).toBeVisible();
+});
 /*
 test('Student scans and marks attendance in an enrolled class', async ({ page }) => {
   await page.goto('/');

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useEffect } from "react";
 import QRCode from 'qrcode';
 import supabase from '../config/supabaseClient';
-import { IonItem, IonList, IonSelect, IonSelectOption, IonButton, IonButtons } from '@ionic/react';
+import { IonItem, IonList, IonSelect, IonSelectOption, IonButton, IonButtons, useIonViewWillLeave} from '@ionic/react';
 
 const QRCodeGen: React.FC = () => {
   const [classes, setName] = useState<any[]>([]);
@@ -15,9 +15,9 @@ const QRCodeGen: React.FC = () => {
   async function getClasses() {
     const { data: { user } } = await supabase.auth.getUser()
     const { data, error } = await supabase
-      .from('teaching_view')
+      .from('sample_class')
       .select()
-      .eq('professor_id', user?.user_metadata?.student_number);
+      .eq('professor_number', user?.user_metadata?.student_number);
     if (error) {
       console.error('Error fetching data:', error);
     } else {
@@ -53,18 +53,54 @@ const QRCodeGen: React.FC = () => {
 
   // }
 
+  // Cleanup upon exiting page
+  useIonViewWillLeave(() => { 
+    setQrCodeDataURL(""); 
+    setSelectedItem("");
+  });
+
+  const viewQRCode = async () => {
+
+    try {
+      const { data, error } = await supabase
+      .from("qr_codes")
+      .select("qr_id") 
+      .eq("class_id", selectedItem)
+
+      if (error)
+        console.log(error)
+      else if (data[0]) {
+        const url = `/app/dashboard/attendance/${data[0].qr_id}`;
+        const dataURL = await QRCode.toDataURL(url);
+        setQrCodeDataURL(dataURL);
+      }
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
   const generateQRCode = async () => {
 
     try {
-      const url = `/app/dashboard/attendance/${selectedItem}`;
-      const dataURL = await QRCode.toDataURL(url);
-      setQrCodeDataURL(dataURL);
+      setQrCodeDataURL("");
+      await supabase
+      .from("qr_codes")
+      .delete()
+      .eq("class_id", selectedItem);
+
+      await supabase
+      .from("qr_codes")
+      .insert ( {class_id: selectedItem} ) 
+   
+      viewQRCode();
     } catch (err) {
       console.error(err);
     }
   };
 
   const handleSelection = (e: CustomEvent) => {
+    setQrCodeDataURL("");
     setSelectedItem(e.detail.value);
     console.log(`ionChange fired with value: ${e.detail.value}`)
   };
@@ -83,6 +119,9 @@ const QRCodeGen: React.FC = () => {
       </IonSelect>
       <IonButton expand="block" onClick={generateQRCode}>
       Generate QR Code
+      </IonButton>
+      <IonButton expand="block" onClick={viewQRCode}>
+      View QR Code
       </IonButton>
       {qrCodeDataURL && <img src={qrCodeDataURL} alt="QR Code" />}
     </div>

@@ -6,16 +6,6 @@ import { Route, RouteComponentProps } from 'react-router';
 import supabase from '../config/supabaseClient';
 import { waitFor } from '@testing-library/dom';
 
-type Class = {
-    id: number;
-    course_name: string;
-    course_title: string;
-    time_start: string;
-    time_end: string;
-    professor: string;
-    toggle?: boolean;
-};
-
 interface MarkAttendanceProps extends RouteComponentProps<{
     id: string;
 }> {}
@@ -24,7 +14,7 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
     const router = useIonRouter();
     const [presentAlert] = useIonAlert();
     const [validUser, setValidUser] = useState<boolean>(false);
-    const [classData, setClassData] = useState<Class>({
+    const [classData, setClassData] = useState<any>({
         id: -1,
         course_name: "",
         course_title: "",
@@ -44,7 +34,7 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
         const { data: { user } } = await supabase.auth.getUser()
         const { error } = await supabase
             .from('attendance')
-            .insert({student_number: user?.user_metadata.student_number, class_id: classData.id, timestamp: (new Date()).toISOString()})
+            .insert({student_number: user?.user_metadata.student_number, class_id: classData.class_id, timestamp: (new Date()).toISOString()})
             if (error){
                 console.log(error)
                 console.log('oh no')
@@ -70,18 +60,17 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
 
     const checkClasses = async () => {
         const { data: { user } } = await supabase.auth.getUser()
-        console.log('checking')
-        var id = router.routeInfo.pathname.replace('/app/dashboard/attendance/', '')
-        const { data, error } = await supabase
-            .from('enrollment_view')
-            .select()
-            .eq('student_number', user?.user_metadata?.student_number)
-            .eq('id', id)
-        console.log(data)
-        if (data?.length == 0){
+        // console.log('checking')
+        var qrurl = router.routeInfo.pathname.replace('/app/dashboard/attendance/', '')
+        const { data: qrdata, error : qrerror } = await supabase
+            .from('qr_codes')
+            .select('class_id')
+            .eq('qr_id', qrurl)
+        // console.log("QR", qrdata)
+        if (qrerror || qrdata?.length == 0){
             presentAlert({
                 header: 'Error',
-                message: 'Not enrolled in this class!',
+                message: "Invalid Code!",
                 backdropDismiss: false,
                 buttons: [{
                     text: 'OK',
@@ -91,7 +80,40 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
                 }],
               })
         } else {
-            setValidUser(true)
+            const { data: enrollmentdata, error : enrollmenterror } = await supabase
+                .from('enrollment_view')
+                .select()
+                .eq('student_number', user?.user_metadata?.student_number)
+                .eq('id', qrdata?.[0].class_id)
+            if (user?.user_metadata.user_type == 'professor'){
+                presentAlert({
+                    header: 'Error',
+                    message: "Professor can't mark attendance!",
+                    backdropDismiss: false,
+                    buttons: [{
+                        text: 'OK',
+                        handler: () => {
+                            router.push("/app/dashboard/view", 'forward', 'replace');
+                        }
+                    }],
+                })
+            }
+            else if (enrollmentdata?.length == 0){
+                presentAlert({
+                    header: 'Error',
+                    message: 'Not enrolled in this class!',
+                    backdropDismiss: false,
+                    buttons: [{
+                        text: 'OK',
+                        handler: () => {
+                            router.push("/app/dashboard/view", 'forward', 'replace');
+                        }
+                    }],
+                })
+            }
+            else {
+                setValidUser(true)
+            }
         }
     }
 
@@ -99,9 +121,9 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
         const id = match.params.id;
         const fetchCurrentClass = async () => {
             const {data, error} = await supabase
-            .from("sample_class")
+            .from("class_qr_view")
             .select()
-            .match({id: id});
+            .match({qr_id: id});
             if (error) {
                 console.log("ERROR:", error);
             }
@@ -115,7 +137,7 @@ const MarkAttendance: React.FC<MarkAttendanceProps> = ({match}) => {
         fetchCurrentClass();
         checkClasses();
     },[]);
-
+    // console.log(validUser)
     return (
         <IonPage>
             <IonHeader>

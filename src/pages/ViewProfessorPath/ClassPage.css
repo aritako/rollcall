@@ -1,0 +1,13 @@
+.classpage-content{
+    display: flex;
+    justify-content: center;
+}
+
+.classpage-title, .classpage-list{
+    display: flex;
+    justify-content: center;
+}
+
+.classpage-list > ion-list {
+    width: 100%;
+}

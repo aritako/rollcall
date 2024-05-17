@@ -43,14 +43,11 @@ ionic cap open
 ```
 
 The latter will open Android Studio with this project. 
-Wait for the loading bars on the lower right to finish, then you can press the 
-```
-Run 'app'
-``` 
-button in the upper middle part of the Android Studio window.
+Wait for the loading bars on the lower right to finish, then you can click the **Run 'app'** button in the upper middle part of the Android Studio window.
 
-This should instantialize (or create) your android emulator.
-Additionally, you can plug your own physical android device (make sure **Developer Options** and **USB Debugging** are ON)
+This should create your android emulator.
+Additionally, you can plug your own physical android device (make sure **Developer Options** and **USB Debugging** are ON);
+or use **WiFi Debugging** and connect over the Internet.
 
 IMPORTANT:
 Every change in code, rerun
@@ -58,5 +55,6 @@ Every change in code, rerun
 ionic cap sync
 ```
 And then wait for the Android Studio loading bars again.
+Finally, click **Run 'app'** once again.
 No need to close or reopen Android Studio.
 
